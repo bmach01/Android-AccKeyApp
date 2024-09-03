@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.bmach01.ackey.ui.theme.AcKeyTheme
 import org.bmach01.ackey.ui.views.MainKeyView
+import org.bmach01.ackey.ui.views.MainPasswordKeyboardView
 import org.bmach01.ackey.ui.views.MainRegisterView
 import org.bmach01.ackey.ui.views.MainSettingsView
 
@@ -27,7 +28,8 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    MainKeyView()
 //                    MainRegisterView()
-                    MainSettingsView()
+//                    MainSettingsView()
+                    MainPasswordKeyboardView()
                 }
             }
         }
