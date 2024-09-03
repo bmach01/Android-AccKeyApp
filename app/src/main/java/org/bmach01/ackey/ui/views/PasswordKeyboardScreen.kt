@@ -1,9 +1,7 @@
 package org.bmach01.ackey.ui.views
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +30,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -77,14 +75,18 @@ fun PasswordDisplay(
 ) {
     val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
                 focusRequester.requestFocus()
-            }
+            },
+        contentAlignment = Alignment.Center
     ) {
         // TextField is positioned under the Row and is invisible
         // It's there to capture input
@@ -96,16 +98,16 @@ fun PasswordDisplay(
             OutlinedTextField(
                 value = text,
                 onValueChange = {
-                    // TODO Add blocker for length
-                    onChange
+                    if (it.length > 4) return@OutlinedTextField
+                    onChange(it)
                     text = it
                     Log.d("bmach", text)
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                 modifier = Modifier
                     .focusRequester(focusRequester)
                     .alpha(0f)
-                    .border(BorderStroke(0.dp, Color.Transparent))
             )
         }
 
