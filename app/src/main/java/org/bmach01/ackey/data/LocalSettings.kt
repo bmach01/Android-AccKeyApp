@@ -1,13 +1,20 @@
 package org.bmach01.ackey.data
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "local_settings")
 
@@ -28,6 +35,5 @@ class LocalSettings(private val context: Context) {
         AuthenticationMethod.valueOf(
             it[AUTHENTICATION_METHOD] ?: AuthenticationMethod.PASSWORD.name
         )
-    }
-
+    }.distinctUntilChanged()
 }

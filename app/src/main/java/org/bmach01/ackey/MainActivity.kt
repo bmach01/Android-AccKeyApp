@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import org.bmach01.ackey.data.LocalSettings
 import org.bmach01.ackey.ui.theme.AcKeyTheme
 import org.bmach01.ackey.ui.view.MainKeyView
+import org.bmach01.ackey.ui.view.MainPasswordKeyboardView
+import org.bmach01.ackey.ui.view.MainRegisterView
+import org.bmach01.ackey.ui.view.MainSettingsView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,19 +20,15 @@ class MainActivity : ComponentActivity() {
 
         val dataStore = LocalSettings(context = baseContext)
 
-//        val t = BiometricHelper(this)
-//        t.test()
-
         setContent {
             AcKeyTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainKeyView()
+//                    MainKeyView()
 //                    MainRegisterView()
-//                    MainSettingsView()
+                    MainSettingsView()
 //                    MainPasswordKeyboardView()
                 }
             }

@@ -1,43 +1,51 @@
 package org.bmach01.ackey.ui.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import org.bmach01.ackey.data.AuthenticationMethod
+import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainSettingsView() {
+    val context = LocalContext.current
+
+    val viewmodel = viewModel {
+        SettingsViewModel(context = context)
+    }
+    val uiState = viewmodel.uiState.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -57,46 +65,40 @@ fun MainSettingsView() {
         ) {
             val categoryModifier = Modifier
                 .fillMaxWidth()
-                .heightIn(200.dp)
-                .padding(16.dp)
+                .padding(vertical = 8.dp, horizontal = 16.dp)
 
-            val switchRowModifier = Modifier
+            val rowModifier = Modifier
                 .padding(start = 32.dp, bottom = 8.dp, end = 32.dp)
                 .fillMaxWidth()
+                .height(40.dp)
 
-            val buttonRowModifier = Modifier
-                .padding(start = 24.dp, bottom = 8.dp, end = 32.dp)
-                .fillMaxWidth()
-
-            // Biometric authentication
             SettingsCategory(
-                label = "Biometric authentication",
+                label = "Authentication method",
                 modifier = categoryModifier,
                 body = {
-                    SettingsSwitch(
+                    SettingsRadioRow(
                         label = "Face authentication",
-                        state = true,
-                        onChange = { /* ... */ },
-                        modifier = switchRowModifier
+                        state = uiState.faceAuthentication,
+                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.FACE) },
+                        modifier = rowModifier
                     )
 
-                    SettingsSwitch(
+                    SettingsRadioRow(
                         label = "Fingerprint authentication",
-                        state = true,
-                        onChange = { /* ... */ },
-                        modifier = switchRowModifier
+                        state = uiState.fingerAuthentication,
+                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.FINGERPRINT) },
+                        modifier = rowModifier
                     )
 
-                    SettingsSwitch(
+                    SettingsRadioRow(
                         label = "Password authentication",
-                        state = true,
-                        onChange = { /* ... */ },
-                        modifier = switchRowModifier
+                        state = uiState.passwordAuthentication,
+                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.PASSWORD) },
+                        modifier = rowModifier
                     )
                 }
             )
 
-            // Account settings
             SettingsCategory(
                 label = "Account management",
                 modifier = categoryModifier,
@@ -104,14 +106,14 @@ fun MainSettingsView() {
                     SettingsButton(
                         label = "Change password",
                         onClick = { /* ... */ },
-                        modifier = buttonRowModifier,
+                        modifier = rowModifier,
                         icon = Icons.Default.Edit
                     )
 
                     SettingsButton(
-                        label = "Delete account",
+                        label = "Unregister device",
                         onClick = { /* ... */ },
-                        modifier = buttonRowModifier,
+                        modifier = rowModifier,
                         icon = Icons.Default.Delete
                     )
                 }
@@ -140,53 +142,45 @@ fun SettingsCategory(
         )
 
         body()
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
 @Composable
-fun SettingsSwitch(
+fun SettingsRadioRow(
     label: String,
     state: Boolean,
-    onChange: (Boolean) -> Unit,
+    onChange: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
+            .clip(RoundedCornerShape(50f))
+            .background(MaterialTheme.colorScheme.secondaryContainer)
             .clickable(
-                interactionSource = interactionSource,
-                indication = null,
                 enabled = enabled,
-                role = Role.Switch,
+                role = Role.RadioButton,
                 onClick = {
-                    onChange(!state)
+                    onChange()
                 }
             )
     ) {
         Text(
             text = label,
             color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(start = 12.dp)
         )
-        Switch(
-            checked = state,
-            onCheckedChange = onChange,
-            thumbContent = if (state) {
-                {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = null,
-                        modifier = Modifier.size(SwitchDefaults.IconSize),
-                    )
-                }
-            } else {
-                null
-            }
 
+        RadioButton(
+            selected = state,
+            onClick = {
+                onChange()
+            }
         )
     }
 }
@@ -199,13 +193,15 @@ fun SettingsButton(
     modifier: Modifier,
     icon: ImageVector
 ) {
-    TextButton (
+    FilledTonalIconButton(
         onClick = onClick,
-        modifier = modifier,
+        enabled = enabled,
+        modifier = modifier
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
 
         ) {
             Row(
@@ -214,8 +210,8 @@ fun SettingsButton(
                 Icon(
                     imageVector = icon,
                     contentDescription = "$label icon",
+                    modifier = Modifier.padding(start = 12.dp, end = 8.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = label,
                     color = MaterialTheme.colorScheme.secondary,
