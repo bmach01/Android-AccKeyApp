@@ -17,15 +17,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.bmach01.ackey.domain.CodeGenerator
+import androidx.lifecycle.viewmodel.compose.viewModel
+import org.bmach01.ackey.ui.viewmodel.KeyViewModel
 
 @Composable
 fun MainKeyView() {
+    val viewmodel = viewModel {
+        KeyViewModel()
+    }
+    val uiState = viewmodel.uiState.collectAsState().value
+    val noImage = uiState.bitmap == null
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -35,12 +41,18 @@ fun MainKeyView() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.weight(3f),
         ) {
-            val code = "TESTESTESTEST"
-            QRCodeDisplay(content = code, width = 1024, height = 512)
+            if (!noImage)
+                Image(
+                    bitmap = uiState.bitmap!!,
+                    contentDescription = "QR Code"
+                )
+
             Text(
-                text = code,
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.labelLarge,
+                text = uiState.data,
+                color = if (noImage) MaterialTheme.colorScheme.secondary
+                        else MaterialTheme.colorScheme.primary,
+                style = if (noImage) MaterialTheme.typography.headlineLarge
+                        else MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center
             )
         }
@@ -58,7 +70,7 @@ fun MainKeyView() {
             val iconModifier = Modifier.size(40.dp)
 
             KeyViewButton(
-                onClick = { /*TODO*/ },
+                onClick = viewmodel::onRefresh,
                 modifier = buttonModifier,
                 icon = {
                     Icon(
@@ -69,7 +81,7 @@ fun MainKeyView() {
                 }
             )
             KeyViewButton(
-                onClick = { /*TODO*/ },
+                onClick = viewmodel::navigateToSettings,
                 modifier = buttonModifier,
                 icon = {
                     Icon(
@@ -98,11 +110,4 @@ fun KeyViewButton(
     ) {
         icon()
     }
-}
-
-@Composable
-fun QRCodeDisplay(content: String, width: Int, height: Int) {
-    val generator = CodeGenerator()
-    val qrBitmap = generator.generateQRCode(content, width, height)
-    Image(bitmap = qrBitmap.asImageBitmap(), contentDescription = "QR Code")
 }
