@@ -13,8 +13,6 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 class LocalSettings(private val context: Context) {
 
-    private val dataStore: DataStore<Preferences> get() = context.dataStore
-
     private companion object {
         val AUTHENTICATION_METHOD = stringPreferencesKey("authentication_method")
     }

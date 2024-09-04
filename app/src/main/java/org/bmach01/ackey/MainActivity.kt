@@ -9,7 +9,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import org.bmach01.ackey.data.LocalSettings
 import org.bmach01.ackey.ui.theme.AcKeyTheme
-import org.bmach01.ackey.ui.views.MainPasswordKeyboardView
+import org.bmach01.ackey.ui.views.MainKeyView
+import org.bmach01.ackey.ui.views.MainSettingsView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,10 +25,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    MainKeyView()
+                    MainKeyView()
 //                    MainRegisterView()
 //                    MainSettingsView()
-                    MainPasswordKeyboardView()
+//                    MainPasswordKeyboardView()
                 }
             }
         }

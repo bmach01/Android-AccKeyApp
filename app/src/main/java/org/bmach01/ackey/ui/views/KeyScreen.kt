@@ -1,26 +1,38 @@
 package org.bmach01.ackey.ui.views
 
-import android.graphics.Bitmap
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Card
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.MultiFormatWriter
-import com.google.zxing.common.BitMatrix
+import org.bmach01.ackey.domain.CodeGenerator
 
 @Composable
 fun MainKeyView() {
@@ -29,59 +41,78 @@ fun MainKeyView() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.padding(horizontal = 8.dp, vertical = 128.dp)
     ) {
-        // Show qr code / bar code
-        QRCodeDisplay(content = "TESTESTESTEST", width = 1024, height = 512)
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.weight(3f),
+        ) {
+            val code = "TESTESTESTEST"
+            QRCodeDisplay(content = code, width = 1024, height = 512)
+            Text(
+                text = code,
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.labelLarge,
+                textAlign = TextAlign.Center
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
-        // two buttons
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .weight(2f)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            val buttonModifier = Modifier.weight(1f).padding(horizontal = 8.dp).fillMaxHeight();
+            val buttonModifier = Modifier.padding(horizontal = 8.dp).size(100.dp)
+            val iconModifier = Modifier.size(40.dp)
 
-            KeyViewButton(action = { /*TODO*/ }, text = "test 1", modifier = buttonModifier)
-            KeyViewButton(action = { /*TODO*/ }, text = "test 2", modifier = buttonModifier)
+            KeyViewButton(
+                onClick = { /*TODO*/ },
+                modifier = buttonModifier,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh button",
+                        modifier = iconModifier
+                    )
+                }
+            )
+            KeyViewButton(
+                onClick = { /*TODO*/ },
+                modifier = buttonModifier,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings button",
+                        modifier = iconModifier
+                    )
+                }
+            )
         }
     }
 }
 
 @Composable
 fun KeyViewButton(
-    action: () -> Unit,
-    text: String,
-    modifier: Modifier
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit,
+    modifier: Modifier,
+    enabled: Boolean = true
 ) {
-    OutlinedButton(
-        onClick = action,
-        modifier = modifier
+    FilledTonalIconButton (
+        onClick = onClick,
+        shape = RoundedCornerShape(50f),
+        modifier = modifier,
+        enabled = enabled
     ) {
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.labelMedium
-        )
+        icon()
     }
 }
 
 @Composable
 fun QRCodeDisplay(content: String, width: Int, height: Int) {
-    val qrBitmap = generateQRCode(content, width, height)
+    val generator = CodeGenerator()
+    val qrBitmap = generator.generateQRCode(content, width, height)
     Image(bitmap = qrBitmap.asImageBitmap(), contentDescription = "QR Code")
-}
-
-fun generateQRCode(content: String, width: Int, height: Int): Bitmap {
-    val bitMatrix: BitMatrix = MultiFormatWriter().encode(content, BarcodeFormat.CODE_128, width, height)
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-
-    for (x in 0 until width) {
-        for (y in 0 until height) {
-            bitmap.setPixel(x, y, if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
-        }
-    }
-
-    return bitmap
 }
