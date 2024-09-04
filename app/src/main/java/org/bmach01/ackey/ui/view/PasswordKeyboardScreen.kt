@@ -1,4 +1,4 @@
-package org.bmach01.ackey.ui.views
+package org.bmach01.ackey.ui.view
 
 import android.util.Log
 import androidx.compose.foundation.background

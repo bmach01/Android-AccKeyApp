@@ -1,4 +1,4 @@
-package org.bmach01.ackey.ui.views
+package org.bmach01.ackey.ui.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -6,22 +6,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import org.bmach01.ackey.ui.viewmodel.RegistrationViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun MainRegisterView() {
+    val viewmodel = viewModel {
+        RegistrationViewModel()
+    }
+    val uiState = viewmodel.uiState.collectAsState().value
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 8.dp, vertical = 128.dp)
@@ -30,9 +38,30 @@ fun MainRegisterView() {
             .padding(horizontal = 32.dp, vertical = 16.dp)
             .fillMaxWidth()
 
+        val titleModifier = Modifier
+            .padding(horizontal = 32.dp)
+            .fillMaxWidth(
+
+            )
+        Text(
+            text = "Device Registration",
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = titleModifier
+        )
+        Text(
+            text = "Powered by AcKey",
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = titleModifier
+        )
+
         // URL input
         RegisterInput(
-            onChange = { /*TODO*/ },
+            onChange = viewmodel::onUrlChange,
+            value = uiState.url,
+            error = uiState.urlError,
+            enabled = uiState.inputUnlocked,
             label = "Domain URL",
             placeholder = "www.domain.com",
             modifier = inputModifier
@@ -41,17 +70,21 @@ fun MainRegisterView() {
 
         // OTP input
         RegisterInput(
-            onChange = { /*TODO*/ },
+            onChange = viewmodel::onOTPChange,
+            value = uiState.otp,
+            error = uiState.otpError,
+            enabled = uiState.inputUnlocked,
             label = "One Time Password",
             placeholder = "Password...",
-            visible = false,
             modifier = inputModifier
         )
 
         Spacer(modifier = Modifier.height(128.dp))
 
         FilledTonalIconButton(
-            onClick = { /*TODO*/ },
+            onClick = viewmodel::onSubmit,
+            enabled = uiState.inputUnlocked,
+            shape = RoundedCornerShape(50f),
             modifier = Modifier
                 .size(100.dp)
         ) {
@@ -67,19 +100,43 @@ fun MainRegisterView() {
 @Composable
 fun RegisterInput(
     onChange: (String) -> Unit,
+    value: String,
+    enabled: Boolean,
     label: String,
+    error: String = "",
     placeholder: String,
     modifier: Modifier,
-    visible: Boolean = true
 ) {
+    val isError = error.isNotEmpty()
     OutlinedTextField(
-        value = "",
+        value = value,
         onValueChange = onChange,
+        enabled = enabled,
+        singleLine = true,
+        modifier = modifier,
+        isError = isError,
+        supportingText = {
+            if (isError) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = error,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        trailingIcon = {
+            if (isError)
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = "Error",
+                    tint = MaterialTheme.colorScheme.error
+                )
+        },
         placeholder = {
             Text(
                 text = placeholder,
                 color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
             )
         },
         label = {
@@ -88,8 +145,7 @@ fun RegisterInput(
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelMedium
             )
-        },
-        visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
-        modifier = modifier
+        }
     )
+
 }
