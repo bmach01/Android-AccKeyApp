@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.bmach01.ackey.ui.state.RegistrationState
 
-class RegistrationViewModel: ViewModel() {
+class RegistrationViewModel(
+    private val navigateTo: (String) -> Unit
+): ViewModel() {
     private val _uiState = MutableStateFlow(RegistrationState())
     val uiState: StateFlow<RegistrationState> = _uiState.asStateFlow()
 

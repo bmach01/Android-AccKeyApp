@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -19,6 +20,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -32,18 +34,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.bmach01.ackey.data.AuthenticationMethod
+import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
+
+@Preview
+@Composable
+fun MainSettingsPreview() {
+    MainSettingsView({})
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainSettingsView() {
+fun MainSettingsView(
+    navigateTo: (route: String) -> Unit
+) {
     val context = LocalContext.current
 
     val viewmodel = viewModel {
-        SettingsViewModel(context = context)
+        SettingsViewModel(
+            context = context,
+            navigateTo = navigateTo
+        )
     }
     val uiState = viewmodel.uiState.collectAsState().value
 
@@ -56,7 +71,18 @@ fun MainSettingsView() {
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleLarge
                     )
-            })
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = viewmodel::goBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "back_button"
+                        )
+                    }
+                }
+            )
         }
     ) {
         Column(

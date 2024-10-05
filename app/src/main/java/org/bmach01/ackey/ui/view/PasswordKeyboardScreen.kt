@@ -32,10 +32,20 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+@Preview
 @Composable
-fun MainPasswordKeyboardView() {
+fun MainPasswordKeyboardPreview() {
+    MainPasswordKeyboardView({})
+}
+
+
+@Composable
+fun MainPasswordKeyboardView(
+    navigateTo: (route: String) -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -61,7 +71,9 @@ fun MainPasswordKeyboardView() {
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.labelMedium,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 46.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 46.dp)
         )
     }
 

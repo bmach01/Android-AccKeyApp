@@ -19,14 +19,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.bmach01.ackey.ui.viewmodel.RegistrationViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.bmach01.ackey.ui.viewmodel.RegistrationViewModel
+
+@Preview
+@Composable
+fun MainRegisterPreview() {
+    MainRegisterView({})
+}
 
 @Composable
-fun MainRegisterView() {
+fun MainRegisterView(
+    navigateTo: (route: String) -> Unit
+) {
     val viewmodel = viewModel {
-        RegistrationViewModel()
+        RegistrationViewModel(
+            navigateTo = navigateTo
+        )
     }
     val uiState = viewmodel.uiState.collectAsState().value
 

@@ -8,9 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.bmach01.ackey.domain.CodeGenerator
+import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.KeyState
 
-class KeyViewModel: ViewModel() {
+class KeyViewModel(
+    private val navigateTo: (String) -> Unit
+): ViewModel() {
 
     // TODO switch it up for model that holds the codegenerator reference
     private val codeGenerator = CodeGenerator()
@@ -34,6 +37,6 @@ class KeyViewModel: ViewModel() {
     }
 
     fun navigateToSettings() {
-        // TODO navigate to settings
+        navigateTo(AppScreen.SettingsScreen.name)
     }
 }
