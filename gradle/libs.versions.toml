@@ -13,6 +13,7 @@ dataStore = "1.1.1"
 biometric = "1.1.0"
 viewmodel = "2.8.6"
 navigation = "2.8.2"
+ktor = "2.3.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,10 @@ androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferenc
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewmodel" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
