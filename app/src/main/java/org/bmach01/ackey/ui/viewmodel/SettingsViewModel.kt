@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.bmach01.ackey.data.AuthenticationMethod
-import org.bmach01.ackey.data.LocalSettings
+import org.bmach01.ackey.data.model.AuthenticationMethod
+import org.bmach01.ackey.data.repo.SettingsRepo
+import org.bmach01.ackey.data.source.LocalDataStore
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.SettingsState
 
@@ -20,7 +21,10 @@ class SettingsViewModel(
     private val navigateTo: (String) -> Unit
 ): ViewModel() {
 
-    private val localSettings = LocalSettings(context)
+    private val settingsRepo: SettingsRepo = SettingsRepo(
+        context = context,
+        getToken = ,
+    )
 
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()
@@ -33,7 +37,7 @@ class SettingsViewModel(
 
     // Only one switch can be set to true
     private suspend fun syncSwitches() {
-        val method = localSettings.authenticationMethod.first()
+        val method = settingsRepo.getAuthenticationMethod()
 
         Log.d("bmach", "sync switches $method")
 
@@ -48,7 +52,7 @@ class SettingsViewModel(
 
     fun onSwitch(method: AuthenticationMethod) {
         viewModelScope.launch {
-            localSettings.saveAuthenticationMethod(method)
+            settingsRepo.saveAuthenticationMethod(method)
             syncSwitches()
             Log.d("bmach", "$method")
         }

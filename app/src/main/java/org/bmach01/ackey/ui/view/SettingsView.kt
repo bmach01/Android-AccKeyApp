@@ -37,8 +37,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.bmach01.ackey.data.AuthenticationMethod
-import org.bmach01.ackey.ui.AppScreen
+import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
 
 @Preview

@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.ktor.cio)
     implementation(libs.ktor.auth)
     implementation(libs.ktor.logging)
+    implementation(libs.slf4j.logging)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
