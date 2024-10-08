@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "local_settings")
 
 class LocalDataStore(private val context: Context) {
+
     suspend fun saveStringValue(key: String, value: String) {
         context.dataStore.edit {
             it[stringPreferencesKey(key)] = value
@@ -22,4 +23,5 @@ class LocalDataStore(private val context: Context) {
     fun getStringFlow(key: String): Flow<String> {
         return context.dataStore.data.map { it[stringPreferencesKey(key)] ?: "" }.distinctUntilChanged()
     }
+
 }
