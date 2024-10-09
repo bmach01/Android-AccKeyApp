@@ -20,8 +20,8 @@ fun AcKeyApp(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        composable(route = AppScreen.KeyScreen.name) {
-            MainKeyView {
+        composable(route = AppScreen.RegisterScreen.name) {
+            MainRegisterView {
                 navController.navigate(it)
             }
         }
@@ -30,8 +30,8 @@ fun AcKeyApp(
                 navController.navigate(it)
             }
         }
-        composable(route = AppScreen.RegisterScreen.name) {
-            MainRegisterView {
+        composable(route = AppScreen.KeyScreen.name) {
+            MainKeyView {
                 navController.navigate(it)
             }
         }

@@ -7,16 +7,20 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
+import io.ktor.http.contentType
+import org.bmach01.ackey.data.model.Credentials
 
 class ApiDataSource(
     private val client: HttpClient = HttpClientProvider.client
 ) {
-    suspend fun login(credentials: BasicAuthCredentials): HttpResponse {
+    suspend fun login(credentials: Credentials): HttpResponse {
         return client.post {
             url {
                 appendPathSegments("login")
             }
+            contentType(ContentType.Application.Json)
             setBody(credentials)
         }
     }
@@ -48,6 +52,7 @@ class ApiDataSource(
             url {
                 appendPathSegments("user").appendPathSegments("deactivate")
             }
+            contentType(ContentType.Application.Json)
             setBody(credentials)
             headers {
                 bearerAuth(token)

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlinSerizalization)
 }
 
 android {
@@ -61,6 +62,8 @@ dependencies {
     implementation(libs.ktor.auth)
     implementation(libs.ktor.logging)
     implementation(libs.slf4j.logging)
+    implementation(libs.ktor.contentNegotiation)
+    implementation (libs.ktor.serialization.kotlinx)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

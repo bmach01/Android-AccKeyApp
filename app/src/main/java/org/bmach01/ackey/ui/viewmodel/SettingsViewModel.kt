@@ -7,12 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.data.repo.SettingsRepo
-import org.bmach01.ackey.data.source.LocalDataStore
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.SettingsState
 
@@ -21,10 +19,7 @@ class SettingsViewModel(
     private val navigateTo: (String) -> Unit
 ): ViewModel() {
 
-    private val settingsRepo: SettingsRepo = SettingsRepo(
-        context = context,
-        getToken = ,
-    )
+    private val settingsRepo: SettingsRepo = SettingsRepo(context)
 
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()

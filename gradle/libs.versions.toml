@@ -41,8 +41,10 @@ ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 slf4j-logging = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4j" }
+ktor-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor"}
+ktor-serialization-kotlinx = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+kotlinSerizalization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
