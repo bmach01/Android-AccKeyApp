@@ -40,7 +40,7 @@ class SettingsViewModel(
             it.copy(
                 faceAuthentication = method == AuthenticationMethod.FACE,
                 fingerAuthentication = method == AuthenticationMethod.FINGERPRINT,
-                passwordAuthentication = method == AuthenticationMethod.PASSWORD
+                passwordAuthentication = method == AuthenticationMethod.PIN
             )
         }
     }

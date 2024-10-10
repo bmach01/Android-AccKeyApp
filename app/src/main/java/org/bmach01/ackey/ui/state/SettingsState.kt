@@ -11,5 +11,5 @@ data class SettingsState(
     val fingerAuthenticationEnabled: Boolean = true,
     val passwordAuthenticationEnabled: Boolean = true,
 
-    val authenticationMethod: AuthenticationMethod = AuthenticationMethod.PASSWORD
+    val authenticationMethod: AuthenticationMethod = AuthenticationMethod.PIN
 )

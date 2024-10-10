@@ -12,7 +12,7 @@ class SettingsRepo(
 
     suspend fun getAuthenticationMethod(): AuthenticationMethod {
         return AuthenticationMethod.valueOf(
-            localDataSource.getStringFlow("authentication_method").first()
+            localDataSource.getStringFlow("authentication_method").first() ?: AuthenticationMethod.PIN.name
         )
     }
 

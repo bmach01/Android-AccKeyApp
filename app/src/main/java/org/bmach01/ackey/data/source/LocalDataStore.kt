@@ -1,6 +1,8 @@
 package org.bmach01.ackey.data.source
 
 import android.content.Context
+import android.util.Base64
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -20,8 +22,8 @@ class LocalDataStore(private val context: Context) {
         }
     }
 
-    fun getStringFlow(key: String): Flow<String> {
-        return context.dataStore.data.map { it[stringPreferencesKey(key)] ?: "" }.distinctUntilChanged()
+    fun getStringFlow(key: String): Flow<String?> {
+        return context.dataStore.data.map { it[stringPreferencesKey(key)] }.distinctUntilChanged()
     }
 
 }

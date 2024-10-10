@@ -118,7 +118,7 @@ fun MainSettingsView(
                     SettingsRadioRow(
                         label = "Password authentication",
                         state = uiState.passwordAuthentication,
-                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.PASSWORD) },
+                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.PIN) },
                         modifier = rowModifier
                     )
                 }

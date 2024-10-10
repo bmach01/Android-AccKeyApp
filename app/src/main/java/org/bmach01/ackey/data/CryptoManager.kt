@@ -2,11 +2,16 @@ package org.bmach01.ackey.data
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.Base64
+import android.util.Log
+import java.io.InputStream
+import java.io.OutputStream
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
+import kotlin.math.ceil
 
 class CryptoManager {
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply {
@@ -51,15 +56,53 @@ class CryptoManager {
         }.generateKey()
     }
 
+    private fun getSizeBytes(size: Int): ByteArray {
+        return byteArrayOf(
+                (size shr 24).toByte(),
+                (size shr 16).toByte(),
+                (size shr 8).toByte(),
+                size.toByte()
+        )
+    }
+
+    private fun getSizeFromBytes(bytes: ByteArray): Int {
+        return (bytes[0].toInt() shl 24) or
+                ((bytes[1].toInt() and 0xFF) shl 16) or
+                ((bytes[2].toInt() and 0xFF) shl 8) or
+                (bytes[3].toInt() and 0xFF)
+    }
+
     fun encrypt(bytes: ByteArray): ByteArray {
-        return encryptCipher.doFinal(byteArrayOf(encryptCipher.iv.size.toByte()) + encryptCipher.iv + bytes)
+        val cipher = encryptCipher
+        val encrypted = cipher.doFinal(bytes)
+        val sizeBytes = getSizeBytes(encrypted.size)
+        val iv = cipher.iv
+
+        return Base64.encode(
+            byteArrayOf(iv.size.toByte()) +
+                    iv +
+                    sizeBytes +
+                    encrypted,
+            Base64.DEFAULT)
     }
 
-    fun decrypt(bytes: ByteArray): ByteArray {
-        val ivSize = bytes[0].toInt()
-        val iv = bytes.sliceArray(1..ivSize + 1)
+    fun decrypt(bytes64: ByteArray): ByteArray {
+        // ByteArray should look like IV_SIZE | IV | MESSAGE_SIZE_BYTES | MESSAGE
+        val bytes = Base64.decode(bytes64, Base64.DEFAULT)
 
-        return getDecryptCipherForIv(iv).doFinal(bytes.sliceArray(1 + ivSize..bytes.size))
+        // Pointer for moving, and extracting data from the ByteArray
+        var pointer = 0
+        val ivSize = bytes[pointer++].toInt()
+
+        val iv = bytes.sliceArray(pointer until ivSize + pointer)
+
+        pointer += ivSize
+
+        val messageSize = getSizeFromBytes(bytes.sliceArray(pointer until pointer + 4))
+        pointer += 4 // size of the message is coded over 4 bytes (int)
+
+        val encryptedMessage = bytes.sliceArray(pointer until pointer + messageSize)
+
+        return getDecryptCipherForIv(iv).doFinal(encryptedMessage)
     }
-
 }
