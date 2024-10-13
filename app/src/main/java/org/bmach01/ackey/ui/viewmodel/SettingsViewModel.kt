@@ -38,9 +38,8 @@ class SettingsViewModel(
 
         _uiState.update {
             it.copy(
-                faceAuthentication = method == AuthenticationMethod.FACE,
-                fingerAuthentication = method == AuthenticationMethod.FINGERPRINT,
-                passwordAuthentication = method == AuthenticationMethod.PIN
+                systemAuthentication = method == AuthenticationMethod.SYSTEM,
+                pinAuthentication = method == AuthenticationMethod.PIN
             )
         }
     }

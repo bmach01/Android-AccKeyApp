@@ -1,15 +1,33 @@
 package org.bmach01.ackey.ui.viewmodel
 
 import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.data.repo.SecretRepo
+import org.bmach01.ackey.data.repo.SettingsRepo
+import org.bmach01.ackey.domain.BiometricHelper
+import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.PINState
 
 class PINViewModel(
@@ -20,7 +38,24 @@ class PINViewModel(
     val uiState: StateFlow<PINState> = _uiState.asStateFlow()
 
     private val secretRepo = SecretRepo(context)
+    private val settingsRepo = SettingsRepo(context)
 
+    private lateinit var biometricHelper: BiometricHelper
+    var isBiometricHelperInitialized = true
+        private set
+
+    private lateinit var biometricResult: Flow<BiometricHelper.BiometricResult>
+
+    init {
+        try {
+            biometricHelper = BiometricHelper()
+            biometricResult = biometricHelper.promptResults
+        }
+        catch (e: InstantiationException) {
+            Log.d(this.javaClass.name, e.message?: "Instantiation exception caught!")
+            isBiometricHelperInitialized = false
+        }
+    }
 
     fun onChangePIN(pin: String) {
         if (!uiState.value.confirming)
@@ -42,6 +77,7 @@ class PINViewModel(
 
         viewModelScope.launch {
             secretRepo.savePIN(uiState.value.pin)
+            _uiState.update { it.copy(isBiometricSettingsPrompt = true) }
         }
 
     }
@@ -50,5 +86,44 @@ class PINViewModel(
         _uiState.update { PINState() }
     }
 
+    fun showBiometricPrompt(title: String, description: String) {
+        biometricHelper.showBiometricPrompt(title, description)
+    }
+
+    fun onBiometricResult(result: ActivityResult) {
+        viewModelScope.launch {
+            if (biometricResult.first() is BiometricHelper.BiometricResult.AuthenticationSuccess)
+                settingsRepo.saveAuthenticationMethod(AuthenticationMethod.SYSTEM)
+        }
+        navigateTo(AppScreen.KeyScreen.name)
+    }
+
+    fun onBiometricCancel() {
+        viewModelScope.launch {
+            settingsRepo.saveAuthenticationMethod(AuthenticationMethod.PIN)
+        }
+        navigateTo(AppScreen.KeyScreen.name)
+    }
+
+    fun onBiometricAccept(
+        enrollLauncher: ActivityResultLauncher<Intent>
+    ) {
+        Log.d("bmach", "onBiometricAccept")
+        viewModelScope.launch {
+            Log.d("bmach", "${biometricResult.last()}")
+
+            if(biometricResult.first() is BiometricHelper.BiometricResult.AuthenticationNotSet) {
+                if(Build.VERSION.SDK_INT >= 30) {
+                    val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+                        putExtra(
+                            Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                            BIOMETRIC_STRONG or DEVICE_CREDENTIAL
+                        )
+                    }
+                    enrollLauncher.launch(enrollIntent)
+                }
+            }
+        }
+    }
 
 }

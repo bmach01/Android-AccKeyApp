@@ -102,22 +102,15 @@ fun MainSettingsView(
                 modifier = categoryModifier,
                 body = {
                     SettingsRadioRow(
-                        label = "Face authentication",
-                        state = uiState.faceAuthentication,
-                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.FACE) },
-                        modifier = rowModifier
-                    )
-
-                    SettingsRadioRow(
-                        label = "Fingerprint authentication",
-                        state = uiState.fingerAuthentication,
-                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.FINGERPRINT) },
+                        label = "System authentication",
+                        state = uiState.systemAuthentication,
+                        onChange = { viewmodel.onSwitch(method = AuthenticationMethod.SYSTEM) },
                         modifier = rowModifier
                     )
 
                     SettingsRadioRow(
                         label = "Password authentication",
-                        state = uiState.passwordAuthentication,
+                        state = uiState.pinAuthentication,
                         onChange = { viewmodel.onSwitch(method = AuthenticationMethod.PIN) },
                         modifier = rowModifier
                     )

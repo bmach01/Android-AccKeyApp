@@ -10,11 +10,12 @@ activityCompose = "1.9.2"
 composeBom = "2024.09.03"
 zxing = "3.4.1"
 dataStore = "1.1.1"
-biometric = "1.1.0"
+biometric = "1.2.0-alpha02"
 viewmodel = "2.8.6"
 navigation = "2.8.2"
 ktor = "2.3.12"
 slf4j = "1.7.36"
+appcompat = "1.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,7 +34,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
-androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
+androidx-biometric = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometric" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewmodel" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
@@ -43,6 +44,7 @@ ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = 
 slf4j-logging = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4j" }
 ktor-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor"}
 ktor-serialization-kotlinx = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
