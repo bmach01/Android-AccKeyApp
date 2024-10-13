@@ -1,14 +1,10 @@
 package org.bmach01.ackey.ui.view
 
 import android.content.Intent
-import android.os.Build
-import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
-import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -51,13 +46,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.bmach01.ackey.domain.BiometricHelper
 import org.bmach01.ackey.ui.viewmodel.PINViewModel
 
 @Preview
@@ -70,6 +63,8 @@ fun MainPINKeyboardPreview() {
 fun MainLoginView(
     navigateTo: (route: String) -> Unit
 ) {
+    // TODO: split it to two viewmodels for reusability(?)
+
     val context = LocalContext.current
     val viewmodel = viewModel {
         PINViewModel(
@@ -79,13 +74,13 @@ fun MainLoginView(
     }
     val uiState by viewmodel.uiState.collectAsState()
 
-    if (uiState.isBiometricSettingsPrompt and viewmodel.isBiometricHelperInitialized) {
+    if (uiState.isBiometricSetupOpen and viewmodel.isBiometricHelperInitialized) {
         EnableBiometricsDialogView(
-            title = "System authentication",
-            description = "Do you want to use authentication system provided by your device (pattern, fingerprint etc.)?",
-            onCancel = viewmodel::onBiometricCancel,
-            onAccept = viewmodel::onBiometricAccept,
-            onResult = viewmodel::onBiometricResult,
+            title = uiState.biometricTitle,
+            description = uiState.biometricInstruction,
+            onCancel = viewmodel::onBiometricSetupCancel,
+            onAccept = viewmodel::onBiometricSetupAccept,
+            onResult = viewmodel::onBiometricSetupResult,
         )
     }
     else {
@@ -146,13 +141,12 @@ fun PINKeyboardView(
 
         IconButton(
             onClick = onCancel,
+            modifier = Modifier.size(40.dp)
         ) {
             Image(
                 imageVector = Icons.Default.Refresh,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                 contentDescription = "Try again button",
-                modifier = Modifier.size(40.dp)
-
             )
         }
     }
@@ -270,6 +264,7 @@ fun EnableBiometricsDialogView(
                 )
             }
 
+            // For catching activity result
             val enrollLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.StartActivityForResult(),
                 onResult = onResult

@@ -5,22 +5,15 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.bmach01.ackey.data.model.AuthenticationMethod
@@ -44,12 +37,12 @@ class PINViewModel(
     var isBiometricHelperInitialized = true
         private set
 
-    private lateinit var biometricResult: Flow<BiometricHelper.BiometricResult>
+    private lateinit var biometricResult: StateFlow<BiometricHelper.BiometricResult?>
 
     init {
         try {
             biometricHelper = BiometricHelper()
-            biometricResult = biometricHelper.promptResults
+            biometricResult = biometricHelper.resultChannel
         }
         catch (e: InstantiationException) {
             Log.d(this.javaClass.name, e.message?: "Instantiation exception caught!")
@@ -77,7 +70,7 @@ class PINViewModel(
 
         viewModelScope.launch {
             secretRepo.savePIN(uiState.value.pin)
-            _uiState.update { it.copy(isBiometricSettingsPrompt = true) }
+            _uiState.update { it.copy(isBiometricSetupOpen = true) }
         }
 
     }
@@ -90,37 +83,42 @@ class PINViewModel(
         biometricHelper.showBiometricPrompt(title, description)
     }
 
-    fun onBiometricResult(result: ActivityResult) {
+    fun onBiometricSetupResult(result: ActivityResult) {
         viewModelScope.launch {
-            if (biometricResult.first() is BiometricHelper.BiometricResult.AuthenticationSuccess)
-                settingsRepo.saveAuthenticationMethod(AuthenticationMethod.SYSTEM)
+            settingsRepo.saveAuthenticationMethod(AuthenticationMethod.SYSTEM)
         }
         navigateTo(AppScreen.KeyScreen.name)
     }
 
-    fun onBiometricCancel() {
+    fun onBiometricSetupCancel() {
         viewModelScope.launch {
             settingsRepo.saveAuthenticationMethod(AuthenticationMethod.PIN)
         }
         navigateTo(AppScreen.KeyScreen.name)
     }
 
-    fun onBiometricAccept(
+    fun onBiometricSetupAccept(
         enrollLauncher: ActivityResultLauncher<Intent>
     ) {
-        Log.d("bmach", "onBiometricAccept")
-        viewModelScope.launch {
-            Log.d("bmach", "${biometricResult.last()}")
-
-            if(biometricResult.first() is BiometricHelper.BiometricResult.AuthenticationNotSet) {
-                if(Build.VERSION.SDK_INT >= 30) {
-                    val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
-                        putExtra(
-                            Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
-                            BIOMETRIC_STRONG or DEVICE_CREDENTIAL
-                        )
+        if (biometricResult.value is BiometricHelper.BiometricResult.AuthenticationNotSet) {
+            if(Build.VERSION.SDK_INT >= 30) {
+                val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+                    putExtra(
+                        Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                        BIOMETRIC_STRONG or DEVICE_CREDENTIAL
+                    )
+                }
+                enrollLauncher.launch(enrollIntent)
+            }
+        }
+        else {
+            showBiometricPrompt("Confirm your identity for AcKey", "You can disable this method of authentication in the settings")
+            viewModelScope.launch {
+                biometricResult.collect {
+                    if (it is BiometricHelper.BiometricResult.AuthenticationSuccess) {
+                        navigateTo(AppScreen.KeyScreen.name)
+                        return@collect
                     }
-                    enrollLauncher.launch(enrollIntent)
                 }
             }
         }

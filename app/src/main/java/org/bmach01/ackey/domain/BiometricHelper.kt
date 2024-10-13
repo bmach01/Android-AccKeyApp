@@ -1,16 +1,14 @@
 package org.bmach01.ackey.domain
 
 import android.os.Build
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 
 class BiometricHelper() {
@@ -41,9 +39,8 @@ class BiometricHelper() {
     } else BIOMETRIC_STRONG
 
 
-    private val resultChannel = Channel<BiometricResult>()
-    val promptResults = resultChannel.receiveAsFlow()
-
+    private val _resultChannel = MutableStateFlow<BiometricResult?>(null)
+    val resultChannel: StateFlow<BiometricResult?> = _resultChannel.asStateFlow()
 
     init {
         if (!isReady())
@@ -51,13 +48,13 @@ class BiometricHelper() {
 
         when(manager.canAuthenticate(authenticators)) {
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
-                resultChannel.trySend(BiometricResult.HardwareUnavailable)
+                _resultChannel.value = BiometricResult.HardwareUnavailable
             }
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
-                resultChannel.trySend(BiometricResult.FeatureUnavailable)
+                _resultChannel.value = BiometricResult.FeatureUnavailable
             }
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                resultChannel.trySend(BiometricResult.AuthenticationNotSet)
+                _resultChannel.value = BiometricResult.AuthenticationNotSet
             }
             else -> Unit
         }
@@ -67,8 +64,6 @@ class BiometricHelper() {
         title: String,
         description: String
     ) {
-        Log.d("bmach", "showBiometricPrompt")
-
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(title)
             .setDescription(description)
@@ -83,17 +78,17 @@ class BiometricHelper() {
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
-                    resultChannel.trySend(BiometricResult.AuthenticationError(errString.toString()))
+                    _resultChannel.value = BiometricResult.AuthenticationError(errString.toString())
                 }
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    resultChannel.trySend(BiometricResult.AuthenticationSuccess)
+                    _resultChannel.value = BiometricResult.AuthenticationSuccess
                 }
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    resultChannel.trySend(BiometricResult.AuthenticationFailed)
+                    _resultChannel.value = BiometricResult.AuthenticationFailed
                 }
             }
         )
