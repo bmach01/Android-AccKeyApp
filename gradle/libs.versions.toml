@@ -16,6 +16,7 @@ navigation = "2.8.2"
 ktor = "2.3.12"
 slf4j = "1.7.36"
 appcompat = "1.7.0"
+datetime = "0.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,7 @@ slf4j-logging = { group = "org.slf4j", name = "slf4j-android", version.ref = "sl
 ktor-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor"}
 ktor-serialization-kotlinx = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -28,8 +28,8 @@ class SecretRepo(context: Context) {
     }
 
     suspend fun savePassword(password: String) {
-        val encrypted = cryptoManager.encrypt(password.toByteArray()).toString()
-        localDataStore.saveStringValue(PASSWORD_KEY, encrypted)
+        val encrypted = cryptoManager.encrypt(password.toByteArray())
+        localDataStore.saveStringValue(PASSWORD_KEY, String(encrypted))
     }
 
     suspend fun getToken(): String {
@@ -41,8 +41,8 @@ class SecretRepo(context: Context) {
     }
 
     suspend fun saveToken(token: String) {
-        val encrypted = cryptoManager.encrypt(token.toByteArray()).toString()
-        localDataStore.saveStringValue(TOKEN_KEY, encrypted)
+        val encrypted = cryptoManager.encrypt(token.toByteArray())
+        localDataStore.saveStringValue(TOKEN_KEY, String(encrypted))
     }
 
     suspend fun getLogin(): String {
@@ -54,8 +54,8 @@ class SecretRepo(context: Context) {
     }
 
     suspend fun saveLogin(login: String) {
-        val encrypted = cryptoManager.encrypt(login.toByteArray()).toString()
-        localDataStore.saveStringValue(LOGIN_KEY, encrypted)
+        val encrypted = cryptoManager.encrypt(login.toByteArray())
+        localDataStore.saveStringValue(LOGIN_KEY, String(encrypted))
     }
 
     suspend fun getPIN(): String {

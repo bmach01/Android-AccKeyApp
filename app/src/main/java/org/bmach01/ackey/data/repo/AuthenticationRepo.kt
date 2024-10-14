@@ -12,7 +12,8 @@ class AuthenticationRepo(
 ) {
 
     suspend fun login(credentials: Credentials): String {
-        return dataSource.login(credentials).body()
+        // TODO polish this
+        return dataSource.login(credentials).body<Map<String, String>>()["token"] ?: ""
     }
 
     suspend fun register(otp: String): Credentials {

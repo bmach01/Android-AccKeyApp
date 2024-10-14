@@ -1,8 +1,10 @@
 package org.bmach01.ackey.data.model
 
-import java.util.Date
+import kotlinx.serialization.Serializable
+import kotlinx.datetime.Instant
 
+@Serializable
 data class AccessKey(
     val key: String,
-    val validUntil: Date,
+    val validUntil: Instant,
 )

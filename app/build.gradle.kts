@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "org.bmach01.ackey"
-        minSdk = 24
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.slf4j.logging)
     implementation(libs.ktor.contentNegotiation)
     implementation (libs.ktor.serialization.kotlinx)
+    implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

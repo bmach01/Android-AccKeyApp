@@ -12,7 +12,7 @@ import org.bmach01.ackey.ui.AppScreen
 @Composable
 fun AcKeyApp(
     navController: NavHostController = rememberNavController(),
-    initialScreen: AppScreen = AppScreen.PasswordKeyboardScreen
+    initialScreen: AppScreen = AppScreen.KeyScreen
 ) {
     NavHost(
         navController = navController,
