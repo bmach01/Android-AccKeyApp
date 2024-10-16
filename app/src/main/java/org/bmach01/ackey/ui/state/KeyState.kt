@@ -1,11 +1,11 @@
 package org.bmach01.ackey.ui.state
 
 import androidx.compose.ui.graphics.ImageBitmap
-import kotlinx.datetime.Instant
+import org.bmach01.ackey.data.model.AccessKey
 
 data class KeyState(
+    val key: AccessKey? = null,
     val bitmap: ImageBitmap? = null,
-    val key: String? = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.".substring(0, 80),
-    val validUntil: Instant? = null,
-    val error: String? = null
+    val isLoadingKey: Boolean = true,
+    val error: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 )

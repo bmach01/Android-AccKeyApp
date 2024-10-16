@@ -3,7 +3,6 @@ package org.bmach01.ackey.ui.viewmodel
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,13 +14,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import org.bmach01.ackey.data.model.AccessKey
 import org.bmach01.ackey.data.repo.AccessKeyRepo
 import org.bmach01.ackey.data.repo.AuthenticationRepo
 import org.bmach01.ackey.data.repo.SecretRepo
-import org.bmach01.ackey.data.source.HttpClientProvider
+import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.CodeGenerator
 import org.bmach01.ackey.domain.TokenRefreshUseCase
 import org.bmach01.ackey.ui.AppScreen
@@ -44,66 +41,68 @@ class KeyViewModel(
     private val refreshToken = TokenRefreshUseCase(secretRepo, authenticationRepo)::refresh
     private val handler: Handler = Handler(Looper.getMainLooper())
 
+    private val settingsRepo = SettingsRepo(context) // TODO delete this, WIP only
+
     init {
         // TODO DELETE THIS | DEBUG ONLY
         viewModelScope.launch {
-            HttpClientProvider.serverUrl = "http://10.0.2.2:8080"
-            val login = "JohnDoe"
-            val password = "kiud#9ru7nbJgaC%kJJ9G2Q@7%ok2z9%up4F\$C%kSVpAXEq1AAbLxn11azZD4M6frzM3Sx4&l\$G@6x!XDjKFuDATszS%ECc7LoP#Jxtg5KPQ#awtrUBd8SDpdT%5G6EI"
-            secretRepo.saveLogin(login)
-            secretRepo.savePassword(password)
-
-            Log.d("bmach", "${Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())}")
+            secretRepo.saveLogin("JohnDoe")
+            secretRepo.savePassword("M@b1qiF!31@m9K1PIuEM1!81gdzfJrBzFheDxL3BT5ZLBx&\$Jmh6AGi\$%McmVM&8q0S5f\$7\$aZNU#jo%OyOmdTZMReIJcQ34o6RRMVpW127aTSI!cL9hp0babzdDDC3m")
+            settingsRepo.saveServerBaseUrl("http://10.0.2.2:8080")
+//            settingsRepo.saveServerBaseUrl("http://192.168.0.102:8080")
+            settingsRepo.getServerBaseUrl()
+            onRefresh()
         }
+    }
 
-        // TODO clean it up when done (this is just for preview WIP)
+    fun setNewKey(key: AccessKey) {
+        _uiState.update { it.copy(
+            key = key
+        ) }
+
         _uiState.update { it.copy(bitmap =
             codeGenerator.generateQRCode(
                 format = BarcodeFormat.CODE_128,
-                content = uiState.value.key ?: "",
+                content = uiState.value.key?.key ?: "",
                 width = 1024,
                 height = 256
             ).asImageBitmap()
         ) }
-
-        onRefresh()
     }
 
     fun onRefresh() {
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingKey = true) }
             handler.removeCallbacks(::onRefresh)
 
             try {
-                val key = accessKeyRepo.getAccessKey()
-                _uiState.update { it.copy(
-                    key = key.key,
-                    validUntil = key.validUntil
-                ) }
+                setNewKey(accessKeyRepo.getAccessKey())
             }
             catch (e: ConnectException) {
-                Log.d("bmach", "connection error")
-                _uiState.update { it.copy(error = "Connection error") }
+                _uiState.update { it.copy(
+                    isLoadingKey = false,
+                    error = "Connection error") }
+                return@launch
             }
             catch (e: ClientRequestException) {
-                Log.d("bmach", "403 error")
                 try {
                     refreshToken()
-                    val key = accessKeyRepo.getAccessKey()
-                    _uiState.update { it.copy(
-                        key = key.key,
-                        validUntil = key.validUntil
-                    ) }
+                    setNewKey(accessKeyRepo.getAccessKey())
                 }
                 catch (e: Exception) {
-                    _uiState.update { it.copy(error = "Account error") }
+                    _uiState.update { it.copy(
+                        isLoadingKey = false,
+                        error = "Account error") }
+                    return@launch
                 }
             }
-            if (uiState.value.validUntil != null)
-                handler.postDelayed(::onRefresh,
-                    uiState.value.validUntil!!
-                        .minus(Clock.System.now())
-                        .inWholeMilliseconds
-                )
+            handler.postDelayed(::onRefresh,
+                uiState.value.key!!.validUntil
+                    .minus(Clock.System.now())
+                    .inWholeMilliseconds
+            )
+
+            _uiState.update { it.copy(isLoadingKey = false) }
         }
     }
 
