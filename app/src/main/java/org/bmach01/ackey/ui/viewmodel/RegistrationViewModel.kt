@@ -79,9 +79,13 @@ class RegistrationViewModel(
 
             secretRepo.saveToken(token)
 
-            navigateTo(AppScreen.PasswordKeyboardScreen.name)
+            navigateTo(AppScreen.PINKeyboardScreen.name)
         }
 
         _uiState.update { it.copy(inputUnlocked = true) }
+    }
+
+    fun navigateToPINKeyboard() {
+        _uiState.update { it.copy(navigation = AppScreen.PINKeyboardScreen) }
     }
 }

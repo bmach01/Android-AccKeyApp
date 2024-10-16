@@ -2,7 +2,7 @@ package org.bmach01.ackey.ui
 
 enum class AppScreen {
     KeyScreen,
-    PasswordKeyboardScreen,
+    PINKeyboardScreen,
     RegisterScreen,
     SettingsScreen
 }

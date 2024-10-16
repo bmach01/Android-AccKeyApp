@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.PINViewModel
 
 @Preview
@@ -73,6 +74,11 @@ fun MainLoginView(
         )
     }
     val uiState by viewmodel.uiState.collectAsState()
+
+    if (uiState.navigation != AppScreen.PINKeyboardScreen)
+        LaunchedEffect(uiState.navigation) {
+            navigateTo(uiState.navigation.name)
+        }
 
     if (uiState.isBiometricSetupOpen and viewmodel.isBiometricHelperInitialized) {
         EnableBiometricsDialogView(

@@ -26,7 +26,6 @@ import org.bmach01.ackey.ui.state.KeyState
 import java.net.ConnectException
 
 class KeyViewModel(
-    private val navigateTo: (String) -> Unit,
     context: Context
 ): ViewModel() {
 
@@ -55,7 +54,7 @@ class KeyViewModel(
         }
     }
 
-    fun setNewKey(key: AccessKey) {
+    private fun setNewKey(key: AccessKey) {
         _uiState.update { it.copy(
             key = key
         ) }
@@ -107,6 +106,6 @@ class KeyViewModel(
     }
 
     fun navigateToSettings() {
-        navigateTo(AppScreen.SettingsScreen.name)
+        _uiState.update { it.copy(navigation = AppScreen.SettingsScreen) }
     }
 }

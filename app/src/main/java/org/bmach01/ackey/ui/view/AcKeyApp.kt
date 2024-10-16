@@ -25,7 +25,7 @@ fun AcKeyApp(
                 navController.navigate(it)
             }
         }
-        composable(route = AppScreen.PasswordKeyboardScreen.name) {
+        composable(route = AppScreen.PINKeyboardScreen.name) {
             MainLoginView {
                 navController.navigate(it)
             }

@@ -124,4 +124,8 @@ class PINViewModel(
         }
     }
 
+    fun navigateToKey() {
+        _uiState.update { it.copy(navigation = AppScreen.KeyScreen) }
+    }
+
 }

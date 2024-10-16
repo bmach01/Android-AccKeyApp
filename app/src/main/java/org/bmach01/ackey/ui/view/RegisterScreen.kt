@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.RegistrationViewModel
 
 @Preview
@@ -43,6 +45,11 @@ fun MainRegisterView(
         )
     }
     val uiState = viewmodel.uiState.collectAsState().value
+
+    if (uiState.navigation != AppScreen.RegisterScreen)
+        LaunchedEffect(uiState.navigation) {
+            navigateTo(uiState.navigation.name)
+        }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

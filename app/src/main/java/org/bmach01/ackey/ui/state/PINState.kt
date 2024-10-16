@@ -1,6 +1,7 @@
 package org.bmach01.ackey.ui.state
 
 import org.bmach01.ackey.domain.BiometricHelper
+import org.bmach01.ackey.ui.AppScreen
 
 data class PINState(
     val pin: String = "",
@@ -12,5 +13,7 @@ data class PINState(
     val biometricTitle: String = "System authentication",
     val biometricInstruction: String = "Do you want to use authentication system provided by your device (pattern, fingerprint etc.)?",
     val isBiometricSetupOpen: Boolean = false,
-    val biometricResult: BiometricHelper.BiometricResult? = null
+    val biometricResult: BiometricHelper.BiometricResult? = null,
+
+    val navigation: AppScreen = AppScreen.PINKeyboardScreen
 )

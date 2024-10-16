@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.bmach01.ackey.data.model.AuthenticationMethod
+import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
 
 @Preview
@@ -60,6 +62,11 @@ fun MainSettingsView(
         )
     }
     val uiState = viewmodel.uiState.collectAsState().value
+
+    if (uiState.navigation != AppScreen.SettingsScreen)
+        LaunchedEffect(uiState.navigation) {
+            navigateTo(uiState.navigation.name)
+        }
 
     Scaffold(
         topBar = {
@@ -109,7 +116,7 @@ fun MainSettingsView(
                     )
 
                     SettingsRadioRow(
-                        label = "Password authentication",
+                        label = "PIN authentication",
                         state = uiState.pinAuthentication,
                         onChange = { viewmodel.onSwitch(method = AuthenticationMethod.PIN) },
                         modifier = rowModifier
@@ -122,7 +129,7 @@ fun MainSettingsView(
                 modifier = categoryModifier,
                 body = {
                     SettingsButton(
-                        label = "Change password",
+                        label = "Change PIN",
                         onClick = { /* ... */ },
                         modifier = rowModifier,
                         icon = Icons.Default.Edit

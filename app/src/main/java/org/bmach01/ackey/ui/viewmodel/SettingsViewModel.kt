@@ -53,7 +53,7 @@ class SettingsViewModel(
     }
 
     fun goBack() {
-        navigateTo(AppScreen.KeyScreen.name)
+        _uiState.update { it.copy(navigation = AppScreen.KeyScreen) }
     }
 
 }
