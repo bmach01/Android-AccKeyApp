@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +32,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.format.char
-import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.KeyViewModel
 
 @Preview
@@ -44,16 +42,10 @@ fun KeyScreenPreview() {
 
 @Composable
 fun MainKeyView(
-    navigateTo: (route: String) -> Unit,
+    navigateToSettings: () -> Unit,
     viewmodel: KeyViewModel = hiltViewModel()
 ) {
     val uiState = viewmodel.uiState.collectAsState().value
-
-    if (uiState.navigation != AppScreen.KeyScreen)
-        LaunchedEffect(Unit) {
-            navigateTo(uiState.navigation.name)
-            // Here should change uiState.navigation = AppScreen.KeyScreen
-        }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,7 +91,7 @@ fun MainKeyView(
                 }
             )
             KeyViewButton(
-                onClick = viewmodel::navigateToSettings,
+                onClick = navigateToSettings,
                 modifier = buttonModifier,
                 icon = {
                     Icon(

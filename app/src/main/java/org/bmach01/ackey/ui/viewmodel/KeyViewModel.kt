@@ -2,7 +2,6 @@ package org.bmach01.ackey.ui.viewmodel
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +21,6 @@ import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.CodeGenerator
 import org.bmach01.ackey.domain.TokenRefreshUseCase
-import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.KeyState
 import java.net.ConnectException
 import javax.inject.Inject
@@ -32,7 +30,7 @@ class KeyViewModel @Inject constructor(
     private val secretRepo: SecretRepo,
     private val accessKeyRepo: AccessKeyRepo,
     private val authenticationRepo: AuthenticationRepo,
-    private val settingsRepo: SettingsRepo // TODO delete this, WIP only
+    private val settingsRepo: SettingsRepo, // TODO delete this, WIP only
 ): ViewModel() {
 
     private val codeGenerator = CodeGenerator()
@@ -44,7 +42,6 @@ class KeyViewModel @Inject constructor(
     private val handler: Handler = Handler(Looper.getMainLooper())
 
     init {
-        Log.d("bmach", "KeyViewModel initialized")
         // TODO DELETE THIS | DEBUG ONLY
         viewModelScope.launch {
             secretRepo.saveLogin("JohnDoe")
@@ -105,9 +102,5 @@ class KeyViewModel @Inject constructor(
 
             _uiState.update { it.copy(isLoadingKey = false) }
         }
-    }
-
-    fun navigateToSettings() {
-        _uiState.update { it.copy(navigation = AppScreen.SettingsScreen) }
     }
 }

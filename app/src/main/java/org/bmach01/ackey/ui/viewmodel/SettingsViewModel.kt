@@ -11,13 +11,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.data.repo.SettingsRepo
-import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.SettingsState
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepo: SettingsRepo
+    private val settingsRepo: SettingsRepo,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsState())
@@ -26,7 +25,6 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             syncSwitches()
-            Log.d("bmach", "SettingsViewModel initialized")
         }
     }
 
@@ -49,9 +47,4 @@ class SettingsViewModel @Inject constructor(
             Log.d("bmach", "$method")
         }
     }
-
-    fun goBack() {
-        _uiState.update { it.copy(goBack = true) }
-    }
-
 }

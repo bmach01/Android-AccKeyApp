@@ -1,7 +1,7 @@
 package org.bmach01.ackey.data.model
 
-import kotlinx.serialization.Serializable
 import kotlinx.datetime.Instant
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class AccessKey(

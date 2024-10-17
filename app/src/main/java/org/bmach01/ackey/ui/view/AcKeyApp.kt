@@ -32,12 +32,17 @@ fun AcKeyApp(
         }
         composable(route = AppScreen.KeyScreen.name) {
             MainKeyView(
-                navigateTo = navController::navigate
+                navigateToSettings = { navController.navigate(AppScreen.SettingsScreen.name) }
             )
         }
         composable(route = AppScreen.SettingsScreen.name) {
             MainSettingsView (
-                goBack = navController::popBackStack
+                goBack = {
+                    if (!navController.popBackStack()) {
+                        navController.navigate(AppScreen.KeyScreen.name)
+                    }
+                    navController.clearBackStack<String>()
+                }
             )
         }
     }
