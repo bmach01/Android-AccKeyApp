@@ -1,7 +1,6 @@
 package org.bmach01.ackey.ui.state
 
 import org.bmach01.ackey.data.model.AuthenticationMethod
-import org.bmach01.ackey.ui.AppScreen
 
 data class SettingsState(
     val systemAuthentication: Boolean = false,
@@ -12,5 +11,5 @@ data class SettingsState(
 
     val authenticationMethod: AuthenticationMethod = AuthenticationMethod.PIN,
 
-    val navigation: AppScreen = AppScreen.SettingsScreen
+    val goBack: Boolean = false
 )

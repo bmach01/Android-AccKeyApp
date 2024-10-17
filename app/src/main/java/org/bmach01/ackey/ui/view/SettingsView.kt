@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,20 +45,20 @@ import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
 @Preview
 @Composable
 fun MainSettingsPreview() {
-    MainSettingsView({})
+    MainSettingsView({ return@MainSettingsView true })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainSettingsView(
-    navigateTo: (route: String) -> Unit,
+    goBack: () -> Boolean,
     viewmodel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState = viewmodel.uiState.collectAsState().value
 
-    if (uiState.navigation != AppScreen.SettingsScreen)
-        LaunchedEffect(uiState.navigation) {
-            navigateTo(uiState.navigation.name)
+    if (uiState.goBack)
+        LaunchedEffect(Unit) {
+            Log.d("bmach", "went back ${goBack()}")
         }
 
     Scaffold(

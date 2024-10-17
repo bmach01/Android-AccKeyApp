@@ -50,8 +50,9 @@ fun MainKeyView(
     val uiState = viewmodel.uiState.collectAsState().value
 
     if (uiState.navigation != AppScreen.KeyScreen)
-        LaunchedEffect(uiState.navigation) {
+        LaunchedEffect(Unit) {
             navigateTo(uiState.navigation.name)
+            // Here should change uiState.navigation = AppScreen.KeyScreen
         }
 
     Column(

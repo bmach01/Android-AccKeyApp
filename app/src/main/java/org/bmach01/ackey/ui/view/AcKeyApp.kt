@@ -37,7 +37,7 @@ fun AcKeyApp(
         }
         composable(route = AppScreen.SettingsScreen.name) {
             MainSettingsView (
-                navigateTo = navController::navigate
+                goBack = navController::popBackStack
             )
         }
     }

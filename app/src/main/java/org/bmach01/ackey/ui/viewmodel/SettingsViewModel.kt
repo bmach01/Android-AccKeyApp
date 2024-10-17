@@ -26,14 +26,13 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             syncSwitches()
+            Log.d("bmach", "SettingsViewModel initialized")
         }
     }
 
     // Only one switch can be set to true
     private suspend fun syncSwitches() {
         val method = settingsRepo.getAuthenticationMethod()
-
-        Log.d("bmach", "sync switches $method")
 
         _uiState.update {
             it.copy(
@@ -52,7 +51,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun goBack() {
-        _uiState.update { it.copy(navigation = AppScreen.KeyScreen) }
+        _uiState.update { it.copy(goBack = true) }
     }
 
 }

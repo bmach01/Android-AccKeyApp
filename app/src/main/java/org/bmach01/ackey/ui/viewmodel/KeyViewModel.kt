@@ -2,6 +2,7 @@ package org.bmach01.ackey.ui.viewmodel
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -43,6 +44,7 @@ class KeyViewModel @Inject constructor(
     private val handler: Handler = Handler(Looper.getMainLooper())
 
     init {
+        Log.d("bmach", "KeyViewModel initialized")
         // TODO DELETE THIS | DEBUG ONLY
         viewModelScope.launch {
             secretRepo.saveLogin("JohnDoe")
