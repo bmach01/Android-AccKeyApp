@@ -4,4 +4,6 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     alias(libs.plugins.ksp)
     alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.hiltGradle) apply false
+
 }

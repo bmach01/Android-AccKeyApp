@@ -11,10 +11,13 @@ import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
 import org.bmach01.ackey.data.model.Credentials
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ApiDataSource(
+@Singleton
+class ApiDataSource @Inject constructor() {
     private val client: HttpClient = HttpClientProvider.client
-) {
+
     suspend fun login(credentials: Credentials): HttpResponse {
         return client.post {
             url {

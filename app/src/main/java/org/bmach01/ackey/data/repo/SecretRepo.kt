@@ -1,23 +1,21 @@
 package org.bmach01.ackey.data.repo
 
-import android.content.Context
-import android.util.Base64
-import android.util.Log
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
-import kotlinx.serialization.StringFormat
 import org.bmach01.ackey.data.CryptoManager
 import org.bmach01.ackey.data.source.LocalDataStore
-import java.nio.charset.Charset
+import javax.inject.Inject
 
-class SecretRepo(context: Context) {
-    private val cryptoManager: CryptoManager = CryptoManager()
-    private val localDataStore: LocalDataStore = LocalDataStore(context)
+class SecretRepo @Inject constructor(
+    private val localDataStore: LocalDataStore,
+) {
+    private val cryptoManager: CryptoManager = CryptoManager
 
-    private val PASSWORD_KEY = "password"
-    private val LOGIN_KEY = "login"
-    private val TOKEN_KEY = "token"
-    private val PIN_KEY = "pin"
+    companion object {
+        private const val PASSWORD_KEY = "password"
+        private const val LOGIN_KEY = "login"
+        private const val TOKEN_KEY = "token"
+        private const val PIN_KEY = "pin"
+    }
 
     suspend fun getPassword(): String {
         val encrypted = localDataStore.getStringFlow(PASSWORD_KEY).first()

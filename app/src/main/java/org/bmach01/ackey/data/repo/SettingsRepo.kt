@@ -1,14 +1,13 @@
 package org.bmach01.ackey.data.repo
 
-import android.content.Context
 import kotlinx.coroutines.flow.first
 import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.data.source.HttpClientProvider
 import org.bmach01.ackey.data.source.LocalDataStore
+import javax.inject.Inject
 
-class SettingsRepo(
-    context: Context,
-    private val localDataSource: LocalDataStore = LocalDataStore(context)
+class SettingsRepo @Inject constructor(
+    private val localDataSource: LocalDataStore
 ) {
 
     suspend fun getAuthenticationMethod(): AuthenticationMethod {

@@ -33,11 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
@@ -51,16 +50,9 @@ fun MainSettingsPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainSettingsView(
-    navigateTo: (route: String) -> Unit
+    navigateTo: (route: String) -> Unit,
+    viewmodel: SettingsViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-
-    val viewmodel = viewModel {
-        SettingsViewModel(
-            context = context,
-            navigateTo = navigateTo
-        )
-    }
     val uiState = viewmodel.uiState.collectAsState().value
 
     if (uiState.navigation != AppScreen.SettingsScreen)

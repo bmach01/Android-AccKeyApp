@@ -25,11 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.datetime.Instant
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeComponents
@@ -45,14 +44,9 @@ fun KeyScreenPreview() {
 
 @Composable
 fun MainKeyView(
-    navigateTo: (route: String) -> Unit
+    navigateTo: (route: String) -> Unit,
+    viewmodel: KeyViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val viewmodel = viewModel {
-        KeyViewModel(
-            context = context
-        )
-    }
     val uiState = viewmodel.uiState.collectAsState().value
 
     if (uiState.navigation != AppScreen.KeyScreen)

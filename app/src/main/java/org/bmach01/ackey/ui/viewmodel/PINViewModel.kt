@@ -1,6 +1,5 @@
 package org.bmach01.ackey.ui.viewmodel
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
@@ -11,6 +10,7 @@ import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,16 +22,16 @@ import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.BiometricHelper
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.PINState
+import javax.inject.Inject
 
-class PINViewModel(
-    private val navigateTo: (String) -> Unit,
-    context: Context
+@HiltViewModel
+class PINViewModel @Inject constructor(
+    private val secretRepo: SecretRepo,
+    private val settingsRepo: SettingsRepo
 ): ViewModel() {
+
     private val _uiState = MutableStateFlow(PINState())
     val uiState: StateFlow<PINState> = _uiState.asStateFlow()
-
-    private val secretRepo = SecretRepo(context)
-    private val settingsRepo = SettingsRepo(context)
 
     private lateinit var biometricHelper: BiometricHelper
     var isBiometricHelperInitialized = true
@@ -87,14 +87,14 @@ class PINViewModel(
         viewModelScope.launch {
             settingsRepo.saveAuthenticationMethod(AuthenticationMethod.SYSTEM)
         }
-        navigateTo(AppScreen.KeyScreen.name)
+//        navigateTo(AppScreen.KeyScreen.name)
     }
 
     fun onBiometricSetupCancel() {
         viewModelScope.launch {
             settingsRepo.saveAuthenticationMethod(AuthenticationMethod.PIN)
         }
-        navigateTo(AppScreen.KeyScreen.name)
+//        navigateTo(AppScreen.KeyScreen.name)
     }
 
     fun onBiometricSetupAccept(
@@ -116,7 +116,7 @@ class PINViewModel(
             viewModelScope.launch {
                 biometricResult.collect {
                     if (it is BiometricHelper.BiometricResult.AuthenticationSuccess) {
-                        navigateTo(AppScreen.KeyScreen.name)
+//                        navigateTo(AppScreen.KeyScreen.name)
                         return@collect
                     }
                 }

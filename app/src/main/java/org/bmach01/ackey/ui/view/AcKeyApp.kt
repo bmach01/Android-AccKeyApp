@@ -21,24 +21,24 @@ fun AcKeyApp(
             .fillMaxSize()
     ) {
         composable(route = AppScreen.RegisterScreen.name) {
-            MainRegisterView {
-                navController.navigate(it)
-            }
+            MainRegisterView (
+                navigateTo = navController::navigate
+            )
         }
         composable(route = AppScreen.PINKeyboardScreen.name) {
-            MainLoginView {
-                navController.navigate(it)
-            }
+            MainLoginView (
+                navigateTo = navController::navigate
+            )
         }
         composable(route = AppScreen.KeyScreen.name) {
-            MainKeyView {
-                navController.navigate(it)
-            }
+            MainKeyView(
+                navigateTo = navController::navigate
+            )
         }
         composable(route = AppScreen.SettingsScreen.name) {
-            MainSettingsView {
-                navController.navigate(it)
-            }
+            MainSettingsView (
+                navigateTo = navController::navigate
+            )
         }
     }
 }

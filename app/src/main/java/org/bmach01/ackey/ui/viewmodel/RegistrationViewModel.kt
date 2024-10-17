@@ -1,8 +1,8 @@
 package org.bmach01.ackey.ui.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,16 +16,16 @@ import org.bmach01.ackey.data.source.HttpClientProvider
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.RegistrationState
 import java.net.ConnectException
+import javax.inject.Inject
 
-class RegistrationViewModel(
-    private val navigateTo: (String) -> Unit,
-    context: Context
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    private val secretRepo: SecretRepo,
+    private val authenticationRepo: AuthenticationRepo
 ): ViewModel() {
+
     private val _uiState = MutableStateFlow(RegistrationState())
     val uiState: StateFlow<RegistrationState> = _uiState.asStateFlow()
-
-    private val secretRepo = SecretRepo(context)
-    private val authenticationRepo = AuthenticationRepo(getToken = secretRepo::getToken)
 
     fun onUrlChange(url: String) {
         _uiState.update { it.copy(url = url, urlError = "") }
@@ -79,7 +79,7 @@ class RegistrationViewModel(
 
             secretRepo.saveToken(token)
 
-            navigateTo(AppScreen.PINKeyboardScreen.name)
+//            navigateTo(AppScreen.PINKeyboardScreen.name)
         }
 
         _uiState.update { it.copy(inputUnlocked = true) }

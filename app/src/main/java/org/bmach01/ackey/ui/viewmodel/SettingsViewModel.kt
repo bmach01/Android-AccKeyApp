@@ -1,9 +1,9 @@
 package org.bmach01.ackey.ui.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,13 +13,12 @@ import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.SettingsState
+import javax.inject.Inject
 
-class SettingsViewModel(
-    context: Context,
-    private val navigateTo: (String) -> Unit
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val settingsRepo: SettingsRepo
 ): ViewModel() {
-
-    private val settingsRepo: SettingsRepo = SettingsRepo(context)
 
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()

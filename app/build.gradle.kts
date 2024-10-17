@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinSerizalization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.hiltGradle)
 }
 
 android {
@@ -70,6 +71,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha02")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

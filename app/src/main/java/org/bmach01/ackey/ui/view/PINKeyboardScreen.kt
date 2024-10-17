@@ -45,12 +45,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.PINViewModel
 
@@ -62,17 +61,10 @@ fun MainPINKeyboardPreview() {
 
 @Composable
 fun MainLoginView(
-    navigateTo: (route: String) -> Unit
+    navigateTo: (route: String) -> Unit,
+    viewmodel: PINViewModel = hiltViewModel()
 ) {
     // TODO: split it to two viewmodels for reusability(?)
-
-    val context = LocalContext.current
-    val viewmodel = viewModel {
-        PINViewModel(
-            navigateTo = navigateTo,
-            context = context
-        )
-    }
     val uiState by viewmodel.uiState.collectAsState()
 
     if (uiState.navigation != AppScreen.PINKeyboardScreen)

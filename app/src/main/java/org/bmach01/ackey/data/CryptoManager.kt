@@ -3,27 +3,21 @@ package org.bmach01.ackey.data
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
-import android.util.Log
-import java.io.InputStream
-import java.io.OutputStream
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
-import kotlin.math.ceil
 
-class CryptoManager {
+object CryptoManager {
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply {
         load(null)
     }
 
-    companion object {
-        private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
-        private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
-        private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
-        private const val TRANSFORMATION = "$ALGORITHM/$BLOCK_MODE/$PADDING"
-    }
+    private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
+    private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
+    private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
+    private const val TRANSFORMATION = "$ALGORITHM/$BLOCK_MODE/$PADDING"
 
     private val encryptCipher get() = Cipher.getInstance(TRANSFORMATION).apply {
         init(Cipher.ENCRYPT_MODE, getKey())

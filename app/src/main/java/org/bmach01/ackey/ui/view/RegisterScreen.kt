@@ -20,10 +20,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.RegistrationViewModel
 
@@ -36,14 +35,8 @@ fun MainRegisterPreview() {
 @Composable
 fun MainRegisterView(
     navigateTo: (route: String) -> Unit,
+    viewmodel: RegistrationViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val viewmodel = viewModel {
-        RegistrationViewModel(
-            navigateTo = navigateTo,
-            context = context
-        )
-    }
     val uiState = viewmodel.uiState.collectAsState().value
 
     if (uiState.navigation != AppScreen.RegisterScreen)

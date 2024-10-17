@@ -1,12 +1,12 @@
 package org.bmach01.ackey.ui.viewmodel
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.zxing.BarcodeFormat
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,23 +24,23 @@ import org.bmach01.ackey.domain.TokenRefreshUseCase
 import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.KeyState
 import java.net.ConnectException
+import javax.inject.Inject
 
-class KeyViewModel(
-    context: Context
+@HiltViewModel
+class KeyViewModel @Inject constructor(
+    private val secretRepo: SecretRepo,
+    private val accessKeyRepo: AccessKeyRepo,
+    private val authenticationRepo: AuthenticationRepo,
+    private val settingsRepo: SettingsRepo // TODO delete this, WIP only
 ): ViewModel() {
 
     private val codeGenerator = CodeGenerator()
     private val _uiState = MutableStateFlow(KeyState())
     val uiState: StateFlow<KeyState> = _uiState.asStateFlow()
 
-    private val secretRepo = SecretRepo(context)
-    private val accessKeyRepo = AccessKeyRepo(getToken = secretRepo::getToken)
-    private val authenticationRepo = AuthenticationRepo(getToken = secretRepo::getToken)
-
     private val refreshToken = TokenRefreshUseCase(secretRepo, authenticationRepo)::refresh
-    private val handler: Handler = Handler(Looper.getMainLooper())
 
-    private val settingsRepo = SettingsRepo(context) // TODO delete this, WIP only
+    private val handler: Handler = Handler(Looper.getMainLooper())
 
     init {
         // TODO DELETE THIS | DEBUG ONLY
@@ -75,7 +75,7 @@ class KeyViewModel(
             handler.removeCallbacks(::onRefresh)
 
             try {
-                setNewKey(accessKeyRepo.getAccessKey())
+                setNewKey(accessKeyRepo.getAccessKey(secretRepo.getToken()))
             }
             catch (e: ConnectException) {
                 _uiState.update { it.copy(
@@ -86,7 +86,7 @@ class KeyViewModel(
             catch (e: ClientRequestException) {
                 try {
                     refreshToken()
-                    setNewKey(accessKeyRepo.getAccessKey())
+                    setNewKey(accessKeyRepo.getAccessKey(secretRepo.getToken()))
                 }
                 catch (e: Exception) {
                     _uiState.update { it.copy(
