@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         BiometricHelper.prepare(this)
 
-
         setContent {
             AcKeyTheme {
                 Surface(

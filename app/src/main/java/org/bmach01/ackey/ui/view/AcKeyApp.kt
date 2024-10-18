@@ -2,7 +2,6 @@ package org.bmach01.ackey.ui.view
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -17,10 +16,9 @@ fun AcKeyApp(
     navController: NavHostController = rememberNavController(),
     viewmodel: AcKeyAppViewModel = hiltViewModel()
 ) {
-    val initialScreen = viewmodel.initialScreen.collectAsState().value
     NavHost(
         navController = navController,
-        startDestination = initialScreen.name,
+        startDestination = viewmodel.getInitialScreen().name,
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -29,9 +27,15 @@ fun AcKeyApp(
                 navigateTo = navController::navigate
             )
         }
-        composable(route = AppScreen.PINKeyboardScreen.name) {
-            MainLoginView (
+        composable(route = AppScreen.LoginSetupScreen.name) {
+            MainLoginSetupView (
                 navigateTo = navController::navigate
+            )
+        }
+        composable(route = AppScreen.LoginScreen.name) {
+            MainLoginScreenView(
+                navigateToKey = { navController.navigate(AppScreen.KeyScreen.name) },
+                navigateToRegistration = { navController.navigate(AppScreen.RegisterScreen.name) }
             )
         }
         composable(route = AppScreen.KeyScreen.name) {

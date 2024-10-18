@@ -86,6 +86,6 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun navigateToPINKeyboard() {
-        _uiState.update { it.copy(navigation = AppScreen.PINKeyboardScreen) }
+        _uiState.update { it.copy(navigation = AppScreen.LoginSetupScreen) }
     }
 }

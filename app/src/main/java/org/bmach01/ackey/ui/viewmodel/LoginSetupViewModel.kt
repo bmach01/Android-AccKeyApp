@@ -21,17 +21,17 @@ import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.BiometricHelper
 import org.bmach01.ackey.ui.AppScreen
-import org.bmach01.ackey.ui.state.PINState
+import org.bmach01.ackey.ui.state.LoginSetupState
 import javax.inject.Inject
 
 @HiltViewModel
-class PINViewModel @Inject constructor(
+class LoginSetupViewModel @Inject constructor(
     private val secretRepo: SecretRepo,
     private val settingsRepo: SettingsRepo
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(PINState())
-    val uiState: StateFlow<PINState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(LoginSetupState())
+    val uiState: StateFlow<LoginSetupState> = _uiState.asStateFlow()
 
     private lateinit var biometricHelper: BiometricHelper
     var isBiometricHelperInitialized = true
@@ -40,6 +40,10 @@ class PINViewModel @Inject constructor(
     private lateinit var biometricResult: StateFlow<BiometricHelper.BiometricResult?>
 
     init {
+        initBiometricHelper()
+    }
+
+    private fun initBiometricHelper() {
         try {
             biometricHelper = BiometricHelper()
             biometricResult = biometricHelper.resultChannel
@@ -48,6 +52,7 @@ class PINViewModel @Inject constructor(
             Log.d(this.javaClass.name, e.message?: "Instantiation exception caught!")
             isBiometricHelperInitialized = false
         }
+
     }
 
     fun onChangePIN(pin: String) {
@@ -76,7 +81,7 @@ class PINViewModel @Inject constructor(
     }
 
     fun onCancel() {
-        _uiState.update { PINState() }
+        _uiState.update { LoginSetupState() }
     }
 
     fun showBiometricPrompt(title: String, description: String) {
