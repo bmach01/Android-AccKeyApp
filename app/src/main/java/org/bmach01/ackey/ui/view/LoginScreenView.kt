@@ -15,8 +15,12 @@ fun MainLoginScreenView(
 ) {
     val uiState = viewmodel.uiState.collectAsState().value
 
+    // TODO: somehow add logic for cancel biometric login (go to registration from biometric login)
     if (viewmodel.isBiometricHelperInitialized && uiState.authenticationMethod == AuthenticationMethod.SYSTEM)
-        viewmodel.showBiometricPrompt("Login", "Lorem ipsum")
+        LaunchedEffect(Unit) {
+            viewmodel.showBiometricPrompt("Login", "Lorem ipsum")
+        }
+
     else
         PINKeyboardView(
             title = "AcKey Login",

@@ -33,6 +33,12 @@ class LoginViewModel @Inject constructor(
         initBiometricHelper()
         updateAuthenticationMethod()
 
+        viewModelScope.launch {
+            biometricResult.collect { value ->
+                if (value == BiometricHelper.BiometricResult.AuthenticationSuccess)
+                    _uiState.update { it.copy(authenticated = true) }
+            }
+        }
     }
 
     private fun initBiometricHelper() {
@@ -73,5 +79,4 @@ class LoginViewModel @Inject constructor(
             _uiState.update { it.copy(authenticated = true) }
         }
     }
-
 }
