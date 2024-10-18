@@ -2,18 +2,22 @@ package org.bmach01.ackey.ui.view
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.bmach01.ackey.ui.AppScreen
+import org.bmach01.ackey.ui.viewmodel.AcKeyAppViewModel
 
 @Composable
 fun AcKeyApp(
     navController: NavHostController = rememberNavController(),
-    initialScreen: AppScreen = AppScreen.KeyScreen
+    viewmodel: AcKeyAppViewModel = hiltViewModel()
 ) {
+    val initialScreen = viewmodel.initialScreen.collectAsState().value
     NavHost(
         navController = navController,
         startDestination = initialScreen.name,
