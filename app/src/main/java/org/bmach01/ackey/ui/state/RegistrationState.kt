@@ -1,6 +1,5 @@
 package org.bmach01.ackey.ui.state
 
-import org.bmach01.ackey.ui.AppScreen
 
 data class RegistrationState(
     val url: String = "",
@@ -9,5 +8,5 @@ data class RegistrationState(
     val otpError: String = "",
     val inputUnlocked: Boolean = true,
 
-    val navigation: AppScreen = AppScreen.RegisterScreen
+    val navigation: Boolean = false
 )

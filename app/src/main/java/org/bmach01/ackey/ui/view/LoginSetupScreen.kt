@@ -50,7 +50,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.LoginSetupViewModel
 
 @Preview
@@ -61,15 +60,15 @@ fun MainLoginSetupPreview() {
 
 @Composable
 fun MainLoginSetupView(
-    navigateTo: (route: String) -> Unit,
+    navigateToKey: () -> Unit,
     viewmodel: LoginSetupViewModel = hiltViewModel()
 ) {
     // TODO: split it to two viewmodels for reusability(?)
     val uiState by viewmodel.uiState.collectAsState()
 
-    if (uiState.navigation != AppScreen.LoginSetupScreen)
-        LaunchedEffect(uiState.navigation) {
-            navigateTo(uiState.navigation.name)
+    if (uiState.navigation)
+        LaunchedEffect(Unit) {
+            navigateToKey()
         }
 
     if (uiState.isBiometricSetupOpen and viewmodel.isBiometricHelperInitialized) {

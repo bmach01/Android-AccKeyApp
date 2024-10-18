@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.viewmodel.RegistrationViewModel
 
 @Preview
@@ -34,14 +33,14 @@ fun MainRegisterPreview() {
 
 @Composable
 fun MainRegisterView(
-    navigateTo: (route: String) -> Unit,
+    navigateToLoginSetup: () -> Unit,
     viewmodel: RegistrationViewModel = hiltViewModel()
 ) {
     val uiState = viewmodel.uiState.collectAsState().value
 
-    if (uiState.navigation != AppScreen.RegisterScreen)
-        LaunchedEffect(uiState.navigation) {
-            navigateTo(uiState.navigation.name)
+    if (uiState.navigation)
+        LaunchedEffect(Unit) {
+            navigateToLoginSetup()
         }
 
     Column(

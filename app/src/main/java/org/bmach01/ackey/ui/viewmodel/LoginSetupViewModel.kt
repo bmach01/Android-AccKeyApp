@@ -20,7 +20,6 @@ import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.BiometricHelper
-import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.LoginSetupState
 import javax.inject.Inject
 
@@ -92,14 +91,14 @@ class LoginSetupViewModel @Inject constructor(
         viewModelScope.launch {
             settingsRepo.saveAuthenticationMethod(AuthenticationMethod.SYSTEM)
         }
-//        navigateTo(AppScreen.KeyScreen.name)
+        navigateToKey()
     }
 
     fun onBiometricSetupCancel() {
         viewModelScope.launch {
             settingsRepo.saveAuthenticationMethod(AuthenticationMethod.PIN)
         }
-//        navigateTo(AppScreen.KeyScreen.name)
+        navigateToKey()
     }
 
     fun onBiometricSetupAccept(
@@ -130,7 +129,7 @@ class LoginSetupViewModel @Inject constructor(
     }
 
     fun navigateToKey() {
-        _uiState.update { it.copy(navigation = AppScreen.KeyScreen) }
+        _uiState.update { it.copy(navigation = true) }
     }
 
 }

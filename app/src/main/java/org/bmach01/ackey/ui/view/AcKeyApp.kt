@@ -24,17 +24,26 @@ fun AcKeyApp(
     ) {
         composable(route = AppScreen.RegisterScreen.name) {
             MainRegisterView (
-                navigateTo = navController::navigate
+                navigateToLoginSetup = {
+                    navController.navigate(AppScreen.LoginSetupScreen.name)
+                    navController.clearBackStack<String>()
+                }
             )
         }
         composable(route = AppScreen.LoginSetupScreen.name) {
             MainLoginSetupView (
-                navigateTo = navController::navigate
+                navigateToKey = {
+                    navController.navigate(AppScreen.KeyScreen.name)
+                    navController.clearBackStack<String>()
+                }
             )
         }
         composable(route = AppScreen.LoginScreen.name) {
             MainLoginScreenView(
-                navigateToKey = { navController.navigate(AppScreen.KeyScreen.name) },
+                navigateToKey = {
+                        navController.navigate(AppScreen.KeyScreen.name)
+                        navController.clearBackStack<String>()
+                    },
                 navigateToRegistration = { navController.navigate(AppScreen.RegisterScreen.name) }
             )
         }

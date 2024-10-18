@@ -13,7 +13,6 @@ import org.bmach01.ackey.data.model.Credentials
 import org.bmach01.ackey.data.repo.AuthenticationRepo
 import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.source.HttpClientProvider
-import org.bmach01.ackey.ui.AppScreen
 import org.bmach01.ackey.ui.state.RegistrationState
 import java.net.ConnectException
 import javax.inject.Inject
@@ -79,13 +78,13 @@ class RegistrationViewModel @Inject constructor(
 
             secretRepo.saveToken(token)
 
-//            navigateTo(AppScreen.PINKeyboardScreen.name)
+            navigateToPINKeyboard()
         }
 
         _uiState.update { it.copy(inputUnlocked = true) }
     }
 
-    fun navigateToPINKeyboard() {
-        _uiState.update { it.copy(navigation = AppScreen.LoginSetupScreen) }
+    private fun navigateToPINKeyboard() {
+        _uiState.update { it.copy(navigation = true) }
     }
 }

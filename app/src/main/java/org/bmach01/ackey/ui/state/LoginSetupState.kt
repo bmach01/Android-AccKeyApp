@@ -1,7 +1,6 @@
 package org.bmach01.ackey.ui.state
 
 import org.bmach01.ackey.domain.BiometricHelper
-import org.bmach01.ackey.ui.AppScreen
 
 data class LoginSetupState(
     val pin: String = "",
@@ -15,5 +14,5 @@ data class LoginSetupState(
     val isBiometricSetupOpen: Boolean = false,
     val biometricResult: BiometricHelper.BiometricResult? = null,
 
-    val navigation: AppScreen = AppScreen.LoginSetupScreen
+    val navigation: Boolean = false
 )
