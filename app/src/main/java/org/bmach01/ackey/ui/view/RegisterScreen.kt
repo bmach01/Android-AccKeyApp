@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +37,7 @@ fun MainRegisterView(
     navigateToLoginSetup: () -> Unit,
     viewmodel: RegistrationViewModel = hiltViewModel()
 ) {
+    BackHandler(true) {}
     val uiState = viewmodel.uiState.collectAsState().value
 
     if (uiState.navigation)

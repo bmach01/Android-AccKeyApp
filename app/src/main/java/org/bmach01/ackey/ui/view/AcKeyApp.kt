@@ -26,7 +26,6 @@ fun AcKeyApp(
             MainRegisterView (
                 navigateToLoginSetup = {
                     navController.navigate(AppScreen.LoginSetupScreen.name)
-                    navController.clearBackStack<String>()
                 }
             )
         }
@@ -34,7 +33,6 @@ fun AcKeyApp(
             MainLoginSetupView (
                 navigateToKey = {
                     navController.navigate(AppScreen.KeyScreen.name)
-                    navController.clearBackStack<String>()
                 }
             )
         }
@@ -42,7 +40,6 @@ fun AcKeyApp(
             MainLoginScreenView(
                 navigateToKey = {
                         navController.navigate(AppScreen.KeyScreen.name)
-                        navController.clearBackStack<String>()
                     },
                 navigateToRegistration = { navController.navigate(AppScreen.RegisterScreen.name) }
             )
@@ -55,14 +52,12 @@ fun AcKeyApp(
         composable(route = AppScreen.SettingsScreen.name) {
             MainSettingsView (
                 goBack = {
-                    if (!navController.popBackStack()) {
+                    if (!navController.popBackStack(AppScreen.KeyScreen.name, true)) {
                         navController.navigate(AppScreen.KeyScreen.name)
                     }
-                    navController.clearBackStack<String>()
                 },
                 navigateToRegistration = {
                     navController.navigate(AppScreen.RegisterScreen.name)
-                    navController.clearBackStack<String>()
                 }
             )
         }

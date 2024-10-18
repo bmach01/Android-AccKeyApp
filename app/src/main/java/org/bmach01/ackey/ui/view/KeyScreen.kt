@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,7 @@ fun MainKeyView(
     viewmodel: KeyViewModel = hiltViewModel()
 ) {
     val uiState = viewmodel.uiState.collectAsState().value
-
+    BackHandler(true) {}
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

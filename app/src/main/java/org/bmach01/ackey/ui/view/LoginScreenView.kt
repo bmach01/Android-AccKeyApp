@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,6 +14,7 @@ fun MainLoginScreenView(
     navigateToRegistration: () -> Unit,
     viewmodel: LoginViewModel = hiltViewModel()
 ) {
+    BackHandler(true) {}
     val uiState = viewmodel.uiState.collectAsState().value
 
     // TODO: somehow add logic for cancel biometric login (go to registration from biometric login)

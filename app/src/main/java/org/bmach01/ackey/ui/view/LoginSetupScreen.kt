@@ -1,6 +1,7 @@
 package org.bmach01.ackey.ui.view
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -63,6 +64,7 @@ fun MainLoginSetupView(
     navigateToKey: () -> Unit,
     viewmodel: LoginSetupViewModel = hiltViewModel()
 ) {
+    BackHandler(true) {}
     // TODO: split it to two viewmodels for reusability(?)
     val uiState by viewmodel.uiState.collectAsState()
 
