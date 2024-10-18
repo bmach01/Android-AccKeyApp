@@ -10,4 +10,6 @@ data class SettingsState(
     val pinAuthenticationEnabled: Boolean = true,
 
     val authenticationMethod: AuthenticationMethod = AuthenticationMethod.PIN,
+
+    val navigateToRegistration: Boolean = false
 )

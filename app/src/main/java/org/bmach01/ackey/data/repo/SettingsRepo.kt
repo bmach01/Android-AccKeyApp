@@ -21,6 +21,7 @@ class SettingsRepo @Inject constructor(
     }
 
     suspend fun saveServerBaseUrl(url: String) {
+        HttpClientProvider.serverUrl = url
         localDataSource.saveStringValue("base_url", url)
     }
 
@@ -28,5 +29,9 @@ class SettingsRepo @Inject constructor(
         val url = localDataSource.getStringFlow("base_url").first() ?: ""
         HttpClientProvider.serverUrl = url
         return url
+    }
+
+    suspend fun clearAllLocalData() {
+        localDataSource.clearAll()
     }
 }

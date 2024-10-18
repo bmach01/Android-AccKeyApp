@@ -60,7 +60,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-
     fun showBiometricPrompt(title: String, description: String) {
         biometricHelper.showBiometricPrompt(title, description)
     }

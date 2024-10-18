@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,16 +43,22 @@ import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
 @Preview
 @Composable
 fun MainSettingsPreview() {
-    MainSettingsView({ return@MainSettingsView })
+    MainSettingsView({}, {})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainSettingsView(
     goBack: () -> Unit,
+    navigateToRegistration: () -> Unit,
     viewmodel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState = viewmodel.uiState.collectAsState().value
+
+    if (uiState.navigateToRegistration)
+        LaunchedEffect(Unit) {
+            navigateToRegistration()
+        }
 
     Scaffold(
         topBar = {
@@ -122,7 +129,7 @@ fun MainSettingsView(
 
                     SettingsButton(
                         label = "Unregister device",
-                        onClick = { /* ... */ },
+                        onClick = viewmodel::onDeactivate,
                         modifier = rowModifier,
                         icon = Icons.Default.Delete
                     )

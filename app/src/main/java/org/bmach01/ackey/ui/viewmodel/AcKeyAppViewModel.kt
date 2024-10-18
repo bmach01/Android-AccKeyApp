@@ -3,6 +3,7 @@ package org.bmach01.ackey.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.repo.SettingsRepo
@@ -17,13 +18,11 @@ class AcKeyAppViewModel @Inject constructor(
 
     fun getInitialScreen(): AppScreen {
         return runBlocking {
-            val urlDeferred = async { settingsRepo.getServerBaseUrl() }
-            val usernameDeferred = async { secretRepo.getLogin() }
-            val passwordDeferred = async { secretRepo.getPassword() }
+            val urlD = async { settingsRepo.getServerBaseUrl() }
+            val usernameD = async { secretRepo.getLogin() }
+            val passwordD = async { secretRepo.getPassword() }
 
-            val url = urlDeferred.await()
-            val username = usernameDeferred.await()
-            val password = passwordDeferred.await()
+            val (url, username, password) = awaitAll(urlD, usernameD, passwordD)
 
             if (url.isEmpty() || username.isEmpty() || password.isEmpty()) {
                 return@runBlocking AppScreen.RegisterScreen

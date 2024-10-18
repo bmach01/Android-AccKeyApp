@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import org.bmach01.ackey.data.model.Credentials
 import org.bmach01.ackey.data.repo.AuthenticationRepo
 import org.bmach01.ackey.data.repo.SecretRepo
-import org.bmach01.ackey.data.source.HttpClientProvider
+import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.ui.state.RegistrationState
 import java.net.ConnectException
 import javax.inject.Inject
@@ -20,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
     private val secretRepo: SecretRepo,
-    private val authenticationRepo: AuthenticationRepo
+    private val authenticationRepo: AuthenticationRepo,
+    private val settingsRepo: SettingsRepo
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(RegistrationState())
@@ -39,7 +40,7 @@ class RegistrationViewModel @Inject constructor(
         // TODO: send data and get errors back
 
         viewModelScope.launch {
-            HttpClientProvider.serverUrl = uiState.value.url
+            settingsRepo.saveServerBaseUrl(uiState.value.url)
 
             val credentials: Credentials
 

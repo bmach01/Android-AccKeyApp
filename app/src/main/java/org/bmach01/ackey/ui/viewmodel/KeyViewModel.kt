@@ -18,7 +18,6 @@ import org.bmach01.ackey.data.model.AccessKey
 import org.bmach01.ackey.data.repo.AccessKeyRepo
 import org.bmach01.ackey.data.repo.AuthenticationRepo
 import org.bmach01.ackey.data.repo.SecretRepo
-import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.CodeGenerator
 import org.bmach01.ackey.domain.TokenRefreshUseCase
 import org.bmach01.ackey.ui.state.KeyState
@@ -30,7 +29,6 @@ class KeyViewModel @Inject constructor(
     private val secretRepo: SecretRepo,
     private val accessKeyRepo: AccessKeyRepo,
     private val authenticationRepo: AuthenticationRepo,
-    private val settingsRepo: SettingsRepo, // TODO delete this, WIP only
 ): ViewModel() {
 
     private val codeGenerator = CodeGenerator()
@@ -42,15 +40,7 @@ class KeyViewModel @Inject constructor(
     private val handler: Handler = Handler(Looper.getMainLooper())
 
     init {
-        // TODO DELETE THIS | DEBUG ONLY
-        viewModelScope.launch {
-            secretRepo.saveLogin("JohnDoe")
-            secretRepo.savePassword("M@b1qiF!31@m9K1PIuEM1!81gdzfJrBzFheDxL3BT5ZLBx&\$Jmh6AGi\$%McmVM&8q0S5f\$7\$aZNU#jo%OyOmdTZMReIJcQ34o6RRMVpW127aTSI!cL9hp0babzdDDC3m")
-            settingsRepo.saveServerBaseUrl("http://10.0.2.2:8080")
-//            settingsRepo.saveServerBaseUrl("http://192.168.0.102:8080")
-            settingsRepo.getServerBaseUrl()
-            onRefresh()
-        }
+        onRefresh()
     }
 
     private fun setNewKey(key: AccessKey) {

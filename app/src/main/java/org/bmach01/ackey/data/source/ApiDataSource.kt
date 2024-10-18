@@ -1,7 +1,6 @@
 package org.bmach01.ackey.data.source
 
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -50,7 +49,7 @@ class ApiDataSource @Inject constructor() {
 
     }
 
-    suspend fun deactivateAccount(credentials: BasicAuthCredentials, token: String): HttpResponse {
+    suspend fun deactivateAccount(credentials: Credentials, token: String): HttpResponse {
         return client.post {
             url {
                 appendPathSegments("user").appendPathSegments("deactivate")

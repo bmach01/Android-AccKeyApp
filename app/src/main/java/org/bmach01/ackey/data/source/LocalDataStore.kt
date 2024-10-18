@@ -28,4 +28,10 @@ class LocalDataStore @Inject constructor(@ApplicationContext private val context
         return context.dataStore.data.map { it[stringPreferencesKey(key)] }.distinctUntilChanged()
     }
 
+    suspend fun clearAll() {
+        context.dataStore.edit {
+            it.clear()
+        }
+    }
+
 }

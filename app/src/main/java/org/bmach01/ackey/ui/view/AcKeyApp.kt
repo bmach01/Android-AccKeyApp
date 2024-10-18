@@ -59,6 +59,10 @@ fun AcKeyApp(
                         navController.navigate(AppScreen.KeyScreen.name)
                     }
                     navController.clearBackStack<String>()
+                },
+                navigateToRegistration = {
+                    navController.navigate(AppScreen.RegisterScreen.name)
+                    navController.clearBackStack<String>()
                 }
             )
         }
