@@ -43,7 +43,7 @@ import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
 @Preview
 @Composable
 fun MainSettingsPreview() {
-    MainSettingsView({}, {})
+    MainSettingsView({}, {}, {})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +51,7 @@ fun MainSettingsPreview() {
 fun MainSettingsView(
     goBack: () -> Unit,
     navigateToRegistration: () -> Unit,
+    navigateToChangePIN: () -> Unit,
     viewmodel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState = viewmodel.uiState.collectAsState().value
@@ -122,7 +123,7 @@ fun MainSettingsView(
                 body = {
                     SettingsButton(
                         label = "Change PIN",
-                        onClick = { /* ... */ },
+                        onClick = navigateToChangePIN,
                         modifier = rowModifier,
                         icon = Icons.Default.Edit
                     )

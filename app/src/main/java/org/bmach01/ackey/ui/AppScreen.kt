@@ -5,5 +5,6 @@ enum class AppScreen {
     LoginSetupScreen,
     RegisterScreen,
     SettingsScreen,
-    LoginScreen
+    LoginScreen,
+    ChangePINScreen
 }

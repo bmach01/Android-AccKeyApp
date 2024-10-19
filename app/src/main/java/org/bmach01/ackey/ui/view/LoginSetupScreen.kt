@@ -66,17 +66,18 @@ fun MainLoginSetupView(
 ) {
     BackHandler(true) {}
     // TODO: split it to two viewmodels for reusability(?)
-    val uiState by viewmodel.uiState.collectAsState()
+    val uiPINState by viewmodel.uiPINState.collectAsState()
+    val uiBiometricState by viewmodel.uiBiometricState.collectAsState()
 
-    if (uiState.navigation)
+    if (uiPINState.navigation)
         LaunchedEffect(Unit) {
             navigateToKey()
         }
 
-    if (uiState.isBiometricSetupOpen and viewmodel.isBiometricHelperInitialized) {
+    if (uiBiometricState.isBiometricSetupOpen and viewmodel.isBiometricHelperInitialized) {
         EnableBiometricsDialogView(
-            title = uiState.biometricTitle,
-            description = uiState.biometricInstruction,
+            title = uiBiometricState.biometricTitle,
+            description = uiBiometricState.biometricInstruction,
             onCancel = viewmodel::onBiometricSetupCancel,
             onAccept = viewmodel::onBiometricSetupAccept,
             onResult = viewmodel::onBiometricSetupResult,
@@ -84,11 +85,11 @@ fun MainLoginSetupView(
     }
     else {
         PINKeyboardView(
-            title = uiState.title,
-            confirming = uiState.confirming,
-            pin = uiState.pin,
-            pin2 = uiState.pin2,
-            instructions = uiState.instructions,
+            title = uiPINState.title,
+            confirming = uiPINState.confirming,
+            pin = uiPINState.pin,
+            pin2 = uiPINState.pin2,
+            instructions = uiPINState.instructions,
             onCancel = viewmodel::onCancel,
             onSubmit = viewmodel::onSubmit,
             onChange = viewmodel::onChangePIN,

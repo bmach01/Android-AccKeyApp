@@ -58,6 +58,18 @@ fun AcKeyApp(
                 },
                 navigateToRegistration = {
                     navController.navigate(AppScreen.RegisterScreen.name)
+                },
+                navigateToChangePIN = {
+                    navController.navigate(AppScreen.ChangePINScreen.name)
+                }
+            )
+        }
+        composable(route = AppScreen.ChangePINScreen.name) {
+            MainChangePINView(
+                goBack = {
+                    if (!navController.popBackStack(AppScreen.SettingsScreen.name, true)) {
+                        navController.navigate(AppScreen.SettingsScreen.name)
+                    }
                 }
             )
         }

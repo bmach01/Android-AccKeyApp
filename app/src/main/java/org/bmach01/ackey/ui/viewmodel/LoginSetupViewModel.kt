@@ -20,6 +20,7 @@ import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.BiometricHelper
+import org.bmach01.ackey.ui.state.BiometricSetupState
 import org.bmach01.ackey.ui.state.LoginSetupState
 import javax.inject.Inject
 
@@ -29,8 +30,10 @@ class LoginSetupViewModel @Inject constructor(
     private val settingsRepo: SettingsRepo
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginSetupState())
-    val uiState: StateFlow<LoginSetupState> = _uiState.asStateFlow()
+    private val _uiPINState = MutableStateFlow(LoginSetupState())
+    val uiPINState = _uiPINState.asStateFlow()
+    private val _uiBiometricState = MutableStateFlow(BiometricSetupState())
+    val uiBiometricState = _uiBiometricState.asStateFlow()
 
     private lateinit var biometricHelper: BiometricHelper
     var isBiometricHelperInitialized = true
@@ -55,32 +58,33 @@ class LoginSetupViewModel @Inject constructor(
     }
 
     fun onChangePIN(pin: String) {
-        if (!uiState.value.confirming)
-            _uiState.update { it.copy(pin = pin) }
+        if (!uiPINState.value.confirming)
+            _uiPINState.update { it.copy(pin = pin) }
         else
-            _uiState.update { it.copy(pin2 = pin) }
+            _uiPINState.update { it.copy(pin2 = pin) }
     }
 
     fun onSubmit() {
-        if (!uiState.value.confirming) {
-            _uiState.update { it.copy(confirming = true, title = "Confirm PIN") }
+        if (!uiPINState.value.confirming) {
+            _uiPINState.update { it.copy(confirming = true, title = "Confirm PIN") }
             return
         }
 
-        if (uiState.value.pin != uiState.value.pin2) {
-            _uiState.update { it.copy(instructions = "Current input is not matching previously set PIN") }
+        if (uiPINState.value.pin != uiPINState.value.pin2) {
+            _uiPINState.update { it.copy(instructions = "Current input is not matching previously set PIN") }
             return
         }
 
         viewModelScope.launch {
-            secretRepo.savePIN(uiState.value.pin)
-            _uiState.update { it.copy(isBiometricSetupOpen = true) }
+            secretRepo.savePIN(uiPINState.value.pin)
+            _uiBiometricState.update { it.copy(isBiometricSetupOpen = true) }
         }
 
     }
 
     fun onCancel() {
-        _uiState.update { LoginSetupState() }
+        _uiPINState.update { LoginSetupState() }
+        _uiBiometricState.update { BiometricSetupState() }
     }
 
     fun showBiometricPrompt(title: String, description: String) {
@@ -129,7 +133,7 @@ class LoginSetupViewModel @Inject constructor(
     }
 
     fun navigateToKey() {
-        _uiState.update { it.copy(navigation = true) }
+        _uiPINState.update { it.copy(navigation = true) }
     }
 
 }
