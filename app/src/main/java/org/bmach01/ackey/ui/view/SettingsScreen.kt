@@ -1,6 +1,5 @@
 package org.bmach01.ackey.ui.view
 
-import org.bmach01.ackey.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +38,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import org.bmach01.ackey.R
 import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.ui.viewmodel.SettingsViewModel
 
@@ -107,14 +107,16 @@ fun MainSettingsView(
                         label = stringResource(R.string.system_authentication),
                         state = uiState.systemAuthentication,
                         onChange = { viewmodel.onSwitch(method = AuthenticationMethod.SYSTEM) },
-                        modifier = rowModifier
+                        modifier = rowModifier,
+                        enabled = uiState.systemAuthenticationEnabled
                     )
 
                     SettingsRadioRow(
                         label = stringResource(R.string.pin_authentication),
                         state = uiState.pinAuthentication,
                         onChange = { viewmodel.onSwitch(method = AuthenticationMethod.PIN) },
-                        modifier = rowModifier
+                        modifier = rowModifier,
+                        enabled = uiState.pinAuthenticationEnabled
                     )
                 }
             )
@@ -127,14 +129,14 @@ fun MainSettingsView(
                         label = stringResource(R.string.change_pin),
                         onClick = navigateToChangePIN,
                         modifier = rowModifier,
-                        icon = Icons.Default.Edit
+                        icon = Icons.Default.Edit,
                     )
 
                     SettingsButton(
                         label = stringResource(R.string.unregister_device),
                         onClick = viewmodel::onDeactivate,
                         modifier = rowModifier,
-                        icon = Icons.Default.Delete
+                        icon = Icons.Default.Delete,
                     )
                 }
             )
@@ -198,6 +200,7 @@ fun SettingsRadioRow(
 
         RadioButton(
             selected = state,
+            enabled = enabled,
             onClick = {
                 onChange()
             }

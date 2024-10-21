@@ -1,6 +1,5 @@
 package org.bmach01.ackey.ui.view
 
-import org.bmach01.ackey.R
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -8,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import org.bmach01.ackey.R
 import org.bmach01.ackey.data.model.AuthenticationMethod
 import org.bmach01.ackey.ui.viewmodel.LoginViewModel
 
@@ -21,7 +21,6 @@ fun MainLoginScreenView(
     val uiState = viewmodel.uiState.collectAsState().value
     val context = LocalContext.current
 
-    // TODO: somehow add logic for cancel biometric login (go to registration from biometric login)
     if (viewmodel.isBiometricHelperInitialized && uiState.authenticationMethod == AuthenticationMethod.SYSTEM)
         LaunchedEffect(Unit) {
             viewmodel.showBiometricPrompt(

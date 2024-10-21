@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import org.bmach01.ackey.data.repo.AuthenticationRepo
 import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.data.repo.UserManagementRepo
+import org.bmach01.ackey.domain.BiometricHelper
 import org.bmach01.ackey.domain.TokenRefreshUseCase
 import org.bmach01.ackey.ui.state.SettingsState
 import java.net.ConnectException
@@ -29,6 +31,9 @@ class SettingsViewModel @Inject constructor(
     private val userManagementRepo: UserManagementRepo,
     private val authenticationRepo: AuthenticationRepo
 ): ViewModel() {
+    private lateinit var biometricHelper: BiometricHelper
+    var isBiometricHelperInitialized = true
+        private set
 
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()
@@ -38,6 +43,30 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             syncSwitches()
+        }
+        initBiometricHelper()
+        blockSwitches()
+    }
+
+    private fun initBiometricHelper() {
+        try {
+            biometricHelper = BiometricHelper()
+        }
+        catch (e: InstantiationException) {
+            Log.d(this.javaClass.name, e.message?: "Instantiation exception caught!")
+            isBiometricHelperInitialized = false
+        }
+
+    }
+
+    private fun blockSwitches() {
+        if (!biometricHelper.canAuthenticate()) {
+            _uiState.update {
+                it.copy(
+                    systemAuthenticationEnabled = false
+                )
+            }
+            onSwitch(AuthenticationMethod.PIN)
         }
     }
 

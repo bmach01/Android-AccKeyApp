@@ -1,6 +1,5 @@
 package org.bmach01.ackey.ui.viewmodel
 
-import org.bmach01.ackey.R
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.bmach01.ackey.R
 import org.bmach01.ackey.data.repo.SecretRepo
 import org.bmach01.ackey.data.repo.SettingsRepo
 import org.bmach01.ackey.domain.BiometricHelper
@@ -56,7 +56,7 @@ class LoginViewModel @Inject constructor(
 
     private fun updateAuthenticationMethod() {
         runBlocking {
-            if (!isBiometricHelperInitialized) return@runBlocking
+            if (!isBiometricHelperInitialized || !biometricHelper.canAuthenticate()) return@runBlocking
             _uiState.update { it.copy(authenticationMethod = settingsRepo.getAuthenticationMethod()) }
         }
     }

@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-
 class BiometricHelper() {
 
     sealed interface BiometricResult {
@@ -42,9 +41,13 @@ class BiometricHelper() {
     private val _resultChannel = MutableStateFlow<BiometricResult?>(null)
     val resultChannel: StateFlow<BiometricResult?> = _resultChannel.asStateFlow()
 
+    fun canAuthenticate(): Boolean {
+        return manager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS
+    }
+
     init {
         if (!isReady())
-            throw InstantiationException("BiometricHelper needs to prepared BiometricHelper.initialize() first")
+            throw InstantiationException("BiometricHelper needs to be prepared with BiometricHelper.prepare() first")
 
         when(manager.canAuthenticate(authenticators)) {
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
@@ -69,10 +72,6 @@ class BiometricHelper() {
             .setDescription(description)
             .setAllowedAuthenticators(authenticators)
 
-        if(Build.VERSION.SDK_INT < 30) {
-            promptInfo.setNegativeButtonText("Cancel")
-        }
-
         val prompt = BiometricPrompt(
             activity,
             object : BiometricPrompt.AuthenticationCallback() {
@@ -95,3 +94,6 @@ class BiometricHelper() {
         prompt.authenticate(promptInfo.build())
     }
 }
+
+
+
