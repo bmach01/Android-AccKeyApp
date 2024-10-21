@@ -130,7 +130,7 @@ class LoginSetupViewModel @Inject constructor(
             viewModelScope.launch {
                 biometricResult.collect {
                     if (it is BiometricHelper.BiometricResult.AuthenticationSuccess) {
-//                        navigateTo(AppScreen.KeyScreen.name)
+                        navigateToKey()
                         return@collect
                     }
                 }
