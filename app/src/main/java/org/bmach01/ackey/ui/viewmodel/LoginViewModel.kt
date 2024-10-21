@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.viewmodel
 
+import org.bmach01.ackey.R
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,9 +61,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun showBiometricPrompt(title: String, description: String) {
-        biometricHelper.showBiometricPrompt(title, description)
-    }
+    fun showBiometricPrompt(title: String, description: String) = biometricHelper.showBiometricPrompt(title, description)
 
     fun onChangePIN(pin: String) {
         _uiState.update { it.copy(pin = pin) }
@@ -71,7 +70,7 @@ class LoginViewModel @Inject constructor(
     fun onSubmit() {
         viewModelScope.launch {
             if (uiState.value.pin != secretRepo.getPIN()) {
-                _uiState.update { it.copy(error = "Incorrect PIN") }
+                _uiState.update { it.copy(error = R.string.incorrect_pin) }
                 return@launch
             }
 

@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">AcKey</string>
+    <string name="Settings">Settings</string>
+    <string name="authentication_method">Authentication Method</string>
+    <string name="system_authentication">System authentication</string>
+    <string name="pin_authentication">PIN authentication</string>
+    <string name="account_management">Account management</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="unregister_device">Unregister device</string>
+    <string name="device_registration">Device Registration</string>
+    <string name="powered_by">Powered by AcKey</string>
+    <string name="domain_url">Domain URL</string>
+    <string name="otp">One Time Password</string>
+    <string name="password">Password...</string>
+    <string name="domainExample">www.MyDomain.com</string>
+    <string name="cancel">Cancel</string>
+    <string name="accept">Accept</string>
+    <string name="system_login_to">System login to AcKey</string>
+    <string name="system_login_description">Use your phone authentication system to login</string>
+    <string name="app_login">AcKey Login</string>
+    <string name="valid_until">Valid until</string>
+    <string name="system_authentication_default_instruction">Do you want to use authentication system provided by your device (pattern, fingerprint etc.)?</string>
+    <string name="emptyString" />
+    <string name="setup_pin">Setup PIN</string>
+    <string name="setup_pin_default_instruction">Setup a 4 digit PIN for login in this app</string>
+    <string name="input_new_pin">Input new PIN</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="pins_not_matching_instruction">Current input is not matching previously set PIN</string>
+    <string name="connection_error">Connection error</string>
+    <string name="account_error">Account error</string>
+    <string name="confirm_your_identity_for">Confirm your identity for AcKey</string>
+    <string name="confirm_your_identity_description">You can disable this method of authentication in the settings</string>
+    <string name="incorrect_pin">Incorrect PIN</string>
+    <string name="cannot_connect">Cannot connect to the server</string>
+    <string name="otp_error">Invalid OTP provided or the account has already been activated. Contact your system administrator.</string>
+    <string name="internal_error">Internal system error. Try again later or contact your system administrator.</string>
 </resources>

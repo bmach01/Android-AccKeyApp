@@ -1,5 +1,7 @@
 package org.bmach01.ackey.ui.viewmodel
 
+import android.content.Context
+import org.bmach01.ackey.R
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
@@ -11,6 +13,7 @@ import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginSetupViewModel @Inject constructor(
     private val secretRepo: SecretRepo,
-    private val settingsRepo: SettingsRepo
+    private val settingsRepo: SettingsRepo,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
 
     private val _uiPINState = MutableStateFlow(LoginSetupState())
@@ -66,12 +70,12 @@ class LoginSetupViewModel @Inject constructor(
 
     fun onSubmit() {
         if (!uiPINState.value.confirming) {
-            _uiPINState.update { it.copy(confirming = true, title = "Confirm PIN") }
+            _uiPINState.update { it.copy(confirming = true, title = R.string.confirm_pin) }
             return
         }
 
         if (uiPINState.value.pin != uiPINState.value.pin2) {
-            _uiPINState.update { it.copy(instructions = "Current input is not matching previously set PIN") }
+            _uiPINState.update { it.copy(instructions = R.string.pins_not_matching_instruction) }
             return
         }
 
@@ -87,9 +91,8 @@ class LoginSetupViewModel @Inject constructor(
         _uiBiometricState.update { BiometricSetupState() }
     }
 
-    fun showBiometricPrompt(title: String, description: String) {
-        biometricHelper.showBiometricPrompt(title, description)
-    }
+    fun showBiometricPrompt(title: String, description: String) = biometricHelper.showBiometricPrompt(title, description)
+
 
     fun onBiometricSetupResult(result: ActivityResult) {
         viewModelScope.launch {
@@ -120,7 +123,10 @@ class LoginSetupViewModel @Inject constructor(
             }
         }
         else {
-            showBiometricPrompt("Confirm your identity for AcKey", "You can disable this method of authentication in the settings")
+            showBiometricPrompt(
+                context.resources.getString(R.string.confirm_your_identity_for),
+                context.resources.getString(R.string.confirm_your_identity_description)
+            )
             viewModelScope.launch {
                 biometricResult.collect {
                     if (it is BiometricHelper.BiometricResult.AuthenticationSuccess) {

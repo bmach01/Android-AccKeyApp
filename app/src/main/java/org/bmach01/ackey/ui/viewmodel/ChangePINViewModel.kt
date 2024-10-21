@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.viewmodel
 
+import org.bmach01.ackey.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +19,8 @@ class ChangePINViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginSetupState(
-        title = "Input new PIN",
-        instructions = "",
+        title = R.string.input_new_pin,
+        instructions = R.string.emptyString,
 
     ))
     val uiState: StateFlow<LoginSetupState> = _uiState.asStateFlow()
@@ -33,12 +34,12 @@ class ChangePINViewModel @Inject constructor(
 
     fun onSubmit() {
         if (!uiState.value.confirming) {
-            _uiState.update { it.copy(confirming = true, title = "Confirm PIN") }
+            _uiState.update { it.copy(confirming = true, title = R.string.confirm_pin) }
             return
         }
 
         if (uiState.value.pin != uiState.value.pin2) {
-            _uiState.update { it.copy(instructions = "Current input is not matching previously set PIN") }
+            _uiState.update { it.copy(instructions = R.string.pins_not_matching_instruction) }
             return
         }
 

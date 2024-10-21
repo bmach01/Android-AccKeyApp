@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import org.bmach01.ackey.R
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -59,13 +61,13 @@ fun MainRegisterView(
 
             )
         Text(
-            text = "Device Registration",
+            text = stringResource(R.string.device_registration),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.headlineLarge,
             modifier = titleModifier
         )
         Text(
-            text = "Powered by AcKey",
+            text = stringResource(R.string.powered_by),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleLarge,
             modifier = titleModifier
@@ -75,10 +77,10 @@ fun MainRegisterView(
         RegisterInput(
             onChange = viewmodel::onUrlChange,
             value = uiState.url,
-            error = uiState.urlError,
+            error = stringResource(uiState.urlError),
             enabled = uiState.inputUnlocked,
-            label = "Domain URL",
-            placeholder = "www.domain.com",
+            label = stringResource(R.string.domain_url),
+            placeholder = stringResource(R.string.domainExample),
             modifier = inputModifier
         )
 
@@ -87,10 +89,10 @@ fun MainRegisterView(
         RegisterInput(
             onChange = viewmodel::onOTPChange,
             value = uiState.otp,
-            error = uiState.otpError,
+            error = stringResource(uiState.otpError),
             enabled = uiState.inputUnlocked,
-            label = "One Time Password",
-            placeholder = "Password...",
+            label = stringResource(R.string.otp),
+            placeholder = stringResource(R.string.password),
             modifier = inputModifier
         )
 

@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.viewmodel
 
+import org.bmach01.ackey.R
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.ui.graphics.asImageBitmap
@@ -69,7 +70,7 @@ class KeyViewModel @Inject constructor(
             catch (e: ConnectException) {
                 _uiState.update { it.copy(
                     isLoadingKey = false,
-                    error = "Connection error") }
+                    error = R.string.connection_error) }
                 return@launch
             }
             catch (e: ClientRequestException) {
@@ -80,7 +81,7 @@ class KeyViewModel @Inject constructor(
                 catch (e: Exception) {
                     _uiState.update { it.copy(
                         isLoadingKey = false,
-                        error = "Account error") }
+                        error = R.string.account_error) }
                     return@launch
                 }
             }

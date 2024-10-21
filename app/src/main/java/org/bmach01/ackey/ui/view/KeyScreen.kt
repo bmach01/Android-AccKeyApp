@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import org.bmach01.ackey.R
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,7 +63,7 @@ fun MainKeyView(
                 isLoading = uiState.isLoadingKey,
                 bitmap = uiState.bitmap,
                 keyText = uiState.key?.key ?: "",
-                error = uiState.error,
+                error = stringResource(uiState.error),
                 validUntil = uiState.key?.validUntil
             )
         }
@@ -164,7 +166,7 @@ fun KeyOrErrorDisplay(
                     hour(); char(':'); minute(); char(':'); second();
                 }
                 Text(
-                    text = "Valid until: ${validUntil.format(customFormat)}",
+                    text = "${stringResource(R.string.valid_until)}: ${validUntil.format(customFormat)}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.labelMedium
                 )

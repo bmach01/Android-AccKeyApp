@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import org.bmach01.ackey.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +68,7 @@ fun MainSettingsView(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Settings",
+                        text = stringResource(R.string.Settings),
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -98,18 +100,18 @@ fun MainSettingsView(
                 .height(40.dp)
 
             SettingsCategory(
-                label = "Authentication method",
+                label = stringResource(R.string.authentication_method),
                 modifier = categoryModifier,
                 body = {
                     SettingsRadioRow(
-                        label = "System authentication",
+                        label = stringResource(R.string.system_authentication),
                         state = uiState.systemAuthentication,
                         onChange = { viewmodel.onSwitch(method = AuthenticationMethod.SYSTEM) },
                         modifier = rowModifier
                     )
 
                     SettingsRadioRow(
-                        label = "PIN authentication",
+                        label = stringResource(R.string.pin_authentication),
                         state = uiState.pinAuthentication,
                         onChange = { viewmodel.onSwitch(method = AuthenticationMethod.PIN) },
                         modifier = rowModifier
@@ -118,18 +120,18 @@ fun MainSettingsView(
             )
 
             SettingsCategory(
-                label = "Account management",
+                label = stringResource(R.string.account_management),
                 modifier = categoryModifier,
                 body = {
                     SettingsButton(
-                        label = "Change PIN",
+                        label = stringResource(R.string.change_pin),
                         onClick = navigateToChangePIN,
                         modifier = rowModifier,
                         icon = Icons.Default.Edit
                     )
 
                     SettingsButton(
-                        label = "Unregister device",
+                        label = stringResource(R.string.unregister_device),
                         onClick = viewmodel::onDeactivate,
                         modifier = rowModifier,
                         icon = Icons.Default.Delete

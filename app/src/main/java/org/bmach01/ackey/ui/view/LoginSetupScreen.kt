@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.view
 
+import org.bmach01.ackey.R
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -46,6 +47,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,8 +78,8 @@ fun MainLoginSetupView(
 
     if (uiBiometricState.isBiometricSetupOpen and viewmodel.isBiometricHelperInitialized) {
         EnableBiometricsDialogView(
-            title = uiBiometricState.biometricTitle,
-            description = uiBiometricState.biometricInstruction,
+            title = stringResource(uiBiometricState.biometricTitle),
+            description = stringResource(uiBiometricState.biometricInstruction),
             onCancel = viewmodel::onBiometricSetupCancel,
             onAccept = viewmodel::onBiometricSetupAccept,
             onResult = viewmodel::onBiometricSetupResult,
@@ -85,11 +87,11 @@ fun MainLoginSetupView(
     }
     else {
         PINKeyboardView(
-            title = uiPINState.title,
+            title = stringResource(uiPINState.title),
             confirming = uiPINState.confirming,
             pin = uiPINState.pin,
             pin2 = uiPINState.pin2,
-            instructions = uiPINState.instructions,
+            instructions = stringResource(uiPINState.instructions),
             onCancel = viewmodel::onCancel,
             onSubmit = viewmodel::onSubmit,
             onChange = viewmodel::onChangePIN,
@@ -258,7 +260,7 @@ fun EnableBiometricsDialogView(
                 onClick = onCancel
             ) {
                 Text(
-                    text = "Cancel",
+                    text = stringResource(R.string.cancel),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelMedium
                 )
@@ -274,7 +276,7 @@ fun EnableBiometricsDialogView(
                 onClick = { onAccept(enrollLauncher) },
             ) {
                 Text(
-                    text = "Accept",
+                    text = stringResource(R.string.accept),
                     color = MaterialTheme.colorScheme.inversePrimary,
                     style = MaterialTheme.typography.labelMedium
                 )

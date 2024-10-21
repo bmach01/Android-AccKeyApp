@@ -3,6 +3,7 @@ package org.bmach01.ackey.ui.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.bmach01.ackey.ui.viewmodel.ChangePINViewModel
 
@@ -14,11 +15,11 @@ fun MainChangePINView(
     val uiState = viewmodel.uiState.collectAsState().value
 
     PINKeyboardView(
-        title = uiState.title,
+        title = stringResource(uiState.title),
         confirming = uiState.confirming,
         pin = uiState.pin,
         pin2 = uiState.pin2,
-        instructions = uiState.instructions,
+        instructions = stringResource(uiState.instructions),
         onCancel = viewmodel::onCancel,
         onChange = viewmodel::onChangePIN,
         onSubmit = viewmodel::onSubmit

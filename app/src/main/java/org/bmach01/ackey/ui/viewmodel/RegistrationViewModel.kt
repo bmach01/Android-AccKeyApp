@@ -1,5 +1,6 @@
 package org.bmach01.ackey.ui.viewmodel
 
+import org.bmach01.ackey.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,16 +29,15 @@ class RegistrationViewModel @Inject constructor(
     val uiState: StateFlow<RegistrationState> = _uiState.asStateFlow()
 
     fun onUrlChange(url: String) {
-        _uiState.update { it.copy(url = url, urlError = "") }
+        _uiState.update { it.copy(url = url, urlError = R.string.emptyString) }
     }
 
     fun onOTPChange(otp: String) {
-        _uiState.update { it.copy(otp = otp, otpError = "") }
+        _uiState.update { it.copy(otp = otp, otpError = R.string.emptyString) }
     }
 
     fun onSubmit() {
         _uiState.update { it.copy(inputUnlocked = false) }
-        // TODO: send data and get errors back
 
         viewModelScope.launch {
             settingsRepo.saveServerBaseUrl(uiState.value.url)
@@ -48,13 +48,11 @@ class RegistrationViewModel @Inject constructor(
                 credentials = authenticationRepo.register(uiState.value.otp)
             }
             catch (e: ConnectException) {
-                // TODO: add string resources
-                _uiState.update { it.copy(urlError = "Cannot connect to the server") }
+                _uiState.update { it.copy(urlError = R.string.cannot_connect) }
                 return@launch
             }
             catch (e: ClientRequestException) {
-                // TODO: add string resources
-                _uiState.update { it.copy(otpError = "Invalid OTP provided or the account has already been activated. Contact your system administrator.") }
+                _uiState.update { it.copy(otpError = R.string.otp_error) }
                 return@launch
             }
 
@@ -67,13 +65,11 @@ class RegistrationViewModel @Inject constructor(
                 token = authenticationRepo.login(credentials)
             }
             catch (e: ConnectException) {
-                // TODO: add string resources
-                _uiState.update { it.copy(urlError = "Cannot connect to the server") }
+                _uiState.update { it.copy(urlError =R.string.cannot_connect) }
                 return@launch
             }
             catch (e: ClientRequestException) {
-                // TODO: add string resources
-                _uiState.update { it.copy(otpError = "Internal system error. Try again later or contact your system administrator.") }
+                _uiState.update { it.copy(otpError = R.string.internal_error) }
                 return@launch
             }
 

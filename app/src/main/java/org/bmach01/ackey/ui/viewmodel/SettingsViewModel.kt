@@ -1,6 +1,5 @@
 package org.bmach01.ackey.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -77,9 +76,7 @@ class SettingsViewModel @Inject constructor(
                     token = token
                 )
             }
-            catch (e: ConnectException) {
-                // TODO: failure popup
-            }
+            catch (e: ConnectException) {}
             catch (e: ClientRequestException) {
                 try {
                     refreshToken()
@@ -88,9 +85,7 @@ class SettingsViewModel @Inject constructor(
                         token = token
                     )
                 }
-                catch (e: Exception) {
-                    Log.d("bmach", "settings::deactivate ClientRequestException caught!")
-                }
+                catch (e: Exception) {}
             }
 
             if (deactivated) {
